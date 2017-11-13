@@ -1,22 +1,5 @@
-if object_id('dup_column') is not NULL
-   DROP PROCEDURE dup_column;
 if object_id('replace_values_with_list_name') is not NULL
    DROP PROCEDURE replace_values_with_list_name;
-GO
--- Procedure dup_column:  Creates a copy of a column.
--- CAUTION:  Column names are just inserted into the SQL without checking
--- Parameters:
---   sourceCol - the name of the source column
---   destCol - the name of the new column to be created with a copy of sourceCol
-CREATE PROCEDURE dup_column @sourceCol nvarchar(255), @destCol nvarchar(255)
-as
-BEGIN
-  print 'in dup_column'
-  EXEC('ALTER TABLE CHEM_EQUIV ADD '+@destCol +' nvarchar(255)');
-  print('UPDATE CHEM_EQUIV SET '+@sourceCol+' = '''' where '+@sourceCol+' is null'); -- cleanup
-  EXEC('UPDATE CHEM_EQUIV SET '+@sourceCol+' = '''' where '+@sourceCol+' is null'); -- cleanup
-  EXEC('UPDATE CHEM_EQUIV SET '+@destCol+' = '+@sourceCol);
-END
 GO
 
 -- Procedure replace_values_with_list_name:  For the given list name, replaces values in the list's
@@ -43,28 +26,30 @@ END
 GO
 
 -- Copy source table
-IF OBJECT_ID('CHEM_EQUIV', 'U') IS NOT NULL 
+DECLARE @equivTable nvarchar(255);
+SET @equivTable = 'CHEM_EQUIV'
+IF OBJECT_ID(@equivTable, 'U') IS NOT NULL
   drop table CHEM_EQUIV;
 select * into CHEM_EQUIV FROM LOINC where CLASS='CHEM' and
    PROPERTY not like 'MS%'; -- exclusion
 
--- METHOD column  
+-- METHOD column
 -- Create modified copies of columns rather than changing originals.
-EXEC dup_column 'METHOD_TYP', 'METHOD_TYP_REV';
+EXEC dup_column @equivTable, 'METHOD_TYP', 'METHOD_TYP_REV';
 UPDATE CHEM_EQUIV set METHOD_TYP_REV = '' where METHOD_TYP_REV not in
   (select ITEM from LISTS where LIST_NAME = 'Chem_Method_Exceptions');
 
 -- SCALE_TYP column
-EXEC dup_column 'SCALE_TYP', 'SCALE_TYP_REV'
+EXEC dup_column @equivTable, 'SCALE_TYP', 'SCALE_TYP_REV'
 DECLARE @scaleList nvarchar(50);
 EXEC replace_values_with_list_name 'Nar/Nom';
 
 -- TIME_ASPCT column
-EXEC dup_column 'TIME_ASPCT', 'TIME_ASPCT_REV'
+EXEC dup_column @equivTable, 'TIME_ASPCT', 'TIME_ASPCT_REV'
 EXEC replace_values_with_list_name 'Timed collection';
 
 -- SYSTEM column
-EXEC dup_column 'SYSTEM', 'SYSTEM_REV';
+EXEC dup_column @equivTable, 'SYSTEM', 'SYSTEM_REV';
 --DECLARE @oxygen_sat_loincs TABLE (loinc_num nvarchar(20))
 --INSERT into @oxygen_sat_loincs
 --  select LOINC_NUM from LOINC_DETAIL_TYPE_1 where COMPONENTCORE = 'Oxygen saturation';
