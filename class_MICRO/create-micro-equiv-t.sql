@@ -2,17 +2,12 @@
 :setvar equivTable "MICRO_EQUIV"
 :setvar orgCol "OrganismGrouper"
 :setvar systemGroupCol "SystemGrouper"
+:setvar methodGroupCol "MicroMethodGrouper"
+:setvar propertyGroup "PrAcncTitr"
 
 -- Copy source table
 EXEC create_equiv_table $(equivTable), 'MICRO'
 GO
-
--- METHOD column
--- Create modified copies of columns rather than changing originals.
-EXEC dup_column $(equivTable), 'METHOD_TYP', 'METHOD_TYP_REV';
-GO
-UPDATE $(equivTable) set METHOD_TYP_REV=Grouper from $(equivTable) left join MICRO_METHOD
-  on $(equivTable).METHOD_TYP = MICRO_METHOD.Name where Grouper is not null;
 
 -- Organism column --
 -- For now Clem says to skip this one.
@@ -57,7 +52,18 @@ UPDATE $(equivTable) set SYSTEM_REV = $(systemGroupCol) from
 -- Property column --
 EXEC dup_column $(equivTable), 'PROPERTY', 'PROPERTY_REV'
 GO
-UPDATE $(equivTable) set PROPERTY = 'PrAcncTitr' where PROPERTY in ('PrThr', 'ACnc', 'Titr');
+UPDATE $(equivTable) set PROPERTY_REV = '$(propertyGroup)' where PROPERTY in ('PrThr', 'ACnc', 'Titr');
+
+-- METHOD column--
+-- Depends on Property change above --
+-- Create modified copies of columns rather than changing originals.
+EXEC dup_column $(equivTable), 'METHOD_TYP', 'METHOD_TYP_REV';
+GO
+UPDATE $(equivTable) set METHOD_TYP_REV=$(methodGroupCol) from $(equivTable) left join MICRO_METHOD
+  on $(equivTable).METHOD_TYP = MICRO_METHOD.Name where $(methodGroupCol) is not null;
+UPDATE $(equivTable) set METHOD_TYP_REV='IA_EIA_IF_RIA_null' where PROPERTY_REV='$(propertyGroup)' and
+  (METHOD_TYP_REV is null or METHOD_TYP_REV = '') and
+  (COMPONENT like '%[+. ]A[bg]' or COMPONENT like '%[+. ]A[bg][+. ]%')
 
 -- Build the equivalance class name
 ALTER TABLE $(equivTable) ADD EQUIV_CLS nvarchar(255);
@@ -65,5 +71,6 @@ GO
 UPDATE $(equivTable) set EQUIV_CLS=CONCAT(COMPONENT,'|',PROPERTY_REV,'|',SYSTEM_REV,'|',METHOD_TYP_REV);
 
 -- Sample output, paritioning by the equivalence class for counts and to remove entries with a count of 1
-select EQUIV_CLS, LOINC_NUM, SYSTEM, SYSTEM_REV, METHOD_TYP, METHOD_TYP_REV
+select EQUIV_CLS, LOINC_NUM, COMPONENT, PROPERTY, PROPERTY_REV, SYSTEM, SYSTEM_REV, METHOD_TYP, METHOD_TYP_REV
   from (select *, count(EQUIV_CLS) over(partition by EQUIV_CLS) as CLS_COUNT From $(equivTable)) t  where CLS_COUNT > 1
+  order by EQUIV_CLS
