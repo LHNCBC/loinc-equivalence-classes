@@ -29,7 +29,7 @@ EXEC apply_groups $(equivTable), 'PROPERTY_REV', 'MICRO_PROPERTY', 'Property_Rev
 EXEC dup_column $(equivTable), 'METHOD_TYP', 'METHOD_REV'
 GO
 EXEC apply_groups $(equivTable), 'METHOD_REV', 'MICRO_METHOD', 'Method_Rev';
-UPDATE $(equivTable) set METHOD_REV='IA*' where
+UPDATE $(equivTable) set METHOD_REV='IA_IF_Null*' where
   (METHOD_REV is null or METHOD_REV = '') and
   (COMPONENT like '%[+. ]A[bg]' or COMPONENT like '%[+. ]A[bg][+. ]%')
 
