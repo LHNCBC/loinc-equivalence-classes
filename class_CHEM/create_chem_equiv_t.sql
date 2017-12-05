@@ -25,8 +25,9 @@ GO
 EXEC apply_groups $(equivTable), 'METHOD_REV', 'CHEM_METHOD', 'Method_Rev';
 
 -- Warning column
-ALTER TABLE $(equivTable) ADD WARNING nvarchar(255) default '';
+ALTER TABLE $(equivTable) ADD WARNING nvarchar(255);
 GO
+UPDATE $(equivTable) set WARNING = '';
 UPDATE $(equivTable) set WARNING = g.Comp_Warning from $(equivTable) left join CHEM_COMPONENT g
   on COMPONENT=g.Name where (Warning_Check = 'Equal' and SYSTEM=Warning_System) OR
   (Warning_Check = 'Not equal' and SYSTEM=Warning_System)
@@ -38,6 +39,6 @@ GO
 UPDATE $(equivTable) set EQUIV_CLS=CONCAT(COMPONENT,'|',PROPERTY_REV,'|',SYSTEM_REV,'|',METHOD_REV);
 
 -- Sample output, paritioning by the equivalence class for counts and to remove entries with a count of 1
-select EQUIV_CLS, LOINC_NUM, COMPONENT, PROPERTY, PROPERTY_REV, SYSTEM, SYSTEM_REV, METHOD_TYP, METHOD_REV, WARNING
+select EQUIV_CLS, LOINC_NUM, COMPONENT, PROPERTY, PROPERTY_REV, SYSTEM, SYSTEM_REV, METHOD_TYP, METHOD_REV, LONG_COMMON_NAME, WARNING
   from (select *, count(EQUIV_CLS) over(partition by EQUIV_CLS) as CLS_COUNT From $(equivTable)) t  where CLS_COUNT > 1
   order by EQUIV_CLS
