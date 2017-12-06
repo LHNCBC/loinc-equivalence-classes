@@ -45,7 +45,25 @@ GO
 UPDATE $(equivTable) set EQUIV_CLS=CONCAT(COMPONENT,'|',PROPERTY_REV,'|',SYSTEM_REV,'|',METHOD_REV,'|',TIME_REV);
 
 -- Sample output, paritioning by the equivalence class for counts and to remove entries with a count of 1
-select EQUIV_CLS, LOINC_NUM, COMPONENT, PROPERTY, PROPERTY_REV, SYSTEM, SYSTEM_REV,
-  METHOD_TYP, METHOD_REV, TIME_ASPCT, TIME_REV, LONG_COMMON_NAME, WARNING
+IF OBJECT_ID('tempdb..#EQUIV_TEMP') IS NOT NULL DROP TABLE #EQUIV_TEMP
+select EQUIV_CLS as heading, * into #EQUIV_TEMP
   from (select *, count(EQUIV_CLS) over(partition by EQUIV_CLS) as CLS_COUNT From $(equivTable)) t  where CLS_COUNT > 1
   order by EQUIV_CLS
+UPDATE #EQUIV_TEMP set heading = '';
+insert into #EQUIV_TEMP (heading, EQUIV_CLS) select distinct(EQUIV_CLS) as heading, EQUIV_CLS as EQUIV_CLS from #EQUIV_TEMP;
+EXEC dup_column '#EQUIV_TEMP', 'EQUIV_CLS', 'EQUIV_ORDER'
+GO
+
+-- Set other fields to blank in the heading rows except EQUIV_ORDER (used for sorting)
+-- This avoids having to respecify the fields in the table.
+DECLARE @sql varchar(max)=''
+select @sql= @sql+case when c.name!='heading' and c.name != 'EQUIV_ORDER' then c.name + '='''',
+' else '' end from tempdb.sys.columns c where object_id =
+object_id('tempdb..#EQUIV_TEMP');
+select @sql = substring(@sql, 1, (len(@sql) - 3)) -- remove last comma
+SET @sql = 'UPDATE #EQUIV_TEMP SET '+@sql + ' where heading != '''''
+EXECUTE (@sql)
+
+
+select * from #EQUIV_TEMP order by EQUIV_ORDER, heading desc
+
