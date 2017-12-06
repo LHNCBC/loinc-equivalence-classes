@@ -50,20 +50,27 @@ select EQUIV_CLS as heading, * into #EQUIV_TEMP
   from (select *, count(EQUIV_CLS) over(partition by EQUIV_CLS) as CLS_COUNT From $(equivTable)) t  where CLS_COUNT > 1
   order by EQUIV_CLS
 UPDATE #EQUIV_TEMP set heading = '';
-insert into #EQUIV_TEMP (heading, EQUIV_CLS) select distinct(EQUIV_CLS) as heading, EQUIV_CLS as EQUIV_CLS from #EQUIV_TEMP;
-EXEC dup_column '#EQUIV_TEMP', 'EQUIV_CLS', 'EQUIV_ORDER'
+EXEC dup_column '#EQUIV_TEMP', 'EQUIV_CLS', 'SORT_ORDER'
 GO
+-- Add heading rows with count
+insert into #EQUIV_TEMP (heading, LOINC_NUM, SORT_ORDER) select EQUIV_CLS, count(EQUIV_CLS), EQUIV_CLS as EQUIV_CLS from #EQUIV_TEMP group by EQUIV_CLS;
 
--- Set other fields to blank in the heading rows except EQUIV_ORDER (used for sorting)
+-- Add blank row after group
+insert into #EQUIV_TEMP (heading, LOINC_NUM, SORT_ORDER) select '', '', EQUIV_CLS + '_BLANKROW' from #EQUIV_TEMP where EQUIV_CLS is not null group by EQUIV_CLS;
+
+-- Set other fields to blank in the heading rows and blank rows except SORT_ORDER (used for sorting)
 -- This avoids having to respecify the fields in the table.
 DECLARE @sql varchar(max)=''
-select @sql= @sql+case when c.name!='heading' and c.name != 'EQUIV_ORDER' then c.name + '='''',
+select @sql= @sql+case when c.name!='heading' and c.name != 'SORT_ORDER' and c.name != 'LOINC_NUM' then c.name + '='''',
 ' else '' end from tempdb.sys.columns c where object_id =
 object_id('tempdb..#EQUIV_TEMP');
 select @sql = substring(@sql, 1, (len(@sql) - 3)) -- remove last comma
-SET @sql = 'UPDATE #EQUIV_TEMP SET '+@sql + ' where heading != '''''
+SET @sql = 'UPDATE #EQUIV_TEMP SET '+@sql + ' where COMPONENT is NULL'
 EXECUTE (@sql)
 
 
-select * from #EQUIV_TEMP order by EQUIV_ORDER, heading desc
+select heading, EQUIV_CLS, LOINC_NUM, COMPONENT, PROPERTY, PROPERTY_REV,
+ SYSTEM, SYSTEM_REV, METHOD_TYP, METHOD_REV, TIME_ASPCT, TIME_REV, LONG_COMMON_NAME,
+ WARNING, SORT_ORDER from #EQUIV_TEMP order by SORT_ORDER, heading desc
+
 
