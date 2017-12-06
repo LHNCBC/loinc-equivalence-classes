@@ -84,9 +84,11 @@ CREATE PROCEDURE apply_groups @equivTable nvarchar(255), @equivTableCol nvarchar
 as
 BEGIN
   DECLARE @sql nvarchar(255);
- -- UPDATE @groupTable set @groupTableCol = RTRIM(LTRIM(@groupTableCol));
+  -- Remove leading/trailling whitespace and newline characters from the
+  -- groupTableCol field
   SET @sql = N'update '+quotename(@groupTable)+
-    N' set '+quotename(@groupTableCol) + N'=RTRIM(LTRIM('+quotename(@groupTableCol)+'));'
+    N' set '+quotename(@groupTableCol) + N'=RTRIM(LTRIM(REPLACE(REPLACE('+
+    quotename(@groupTableCol)+ ', CHAR(13), ''''), CHAR(10), '''')));'
   EXEC sp_executeSQL @sql,
     N'@groupTable nvarchar(255), @groupTableCol nvarchar(255)',
     @groupTable=@groupTable, @groupTableCol=@groupTableCol;
