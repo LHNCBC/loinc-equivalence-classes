@@ -89,17 +89,13 @@ BEGIN
   SET @sql = N'update '+quotename(@groupTable)+
     N' set '+quotename(@groupTableCol) + N'=RTRIM(LTRIM(REPLACE(REPLACE('+
     quotename(@groupTableCol)+ ', CHAR(13), ''''), CHAR(10), '''')));'
-  EXEC sp_executeSQL @sql,
-    N'@groupTable nvarchar(255), @groupTableCol nvarchar(255)',
-    @groupTable=@groupTable, @groupTableCol=@groupTableCol;
+  EXEC (@sql)
   SET @sql = N'UPDATE '+ quotename(@equivTable) + N' set '+quotename(@equivTableCol)+
     N' = g.'+quotename(@groupTableCol)+N' from '+quotename(@equivTable)+' eqv left join '+
     quotename(@groupTable)+N' g on eqv.'+quotename(@equivTableCol)+
     N' = g.Name where g.'+quotename(@groupTableCol)+N' != ''"'' and g.'+
     quotename(@groupTableCol)+N' is not null  ;'
-  EXEC sp_executeSQL @sql,
-    N'@equivTable nvarchar(255), @equivTableCol nvarchar(255), @groupTable nvarchar(255), @groupTableCol nvarchar(255)',
-	@equivTable=@equivTable, @equivTableCol=@equivTableCol, @groupTable=@groupTable, @groupTableCol=@groupTableCol;
+  EXEC (@sql)
 END;
 GO
 
