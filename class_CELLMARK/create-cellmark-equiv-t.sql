@@ -8,18 +8,18 @@ GO
 -- System column --
 EXEC dup_column $(equivTable), 'SYSTEM', 'SYSTEM_REV'
 GO
-EXEC apply_groups $(equivTable), 'SYSTEM_REV', 'DRUGTOX_SYSTEM', 'System_Rev';
+EXEC apply_groups $(equivTable), 'SYSTEM_REV', 'CELLMARK_SYSTEM', 'System_Rev';
 
 
 -- Property column --
 EXEC dup_column $(equivTable), 'PROPERTY', 'PROPERTY_REV'
 GO
-EXEC apply_groups $(equivTable), 'PROPERTY_REV', 'DRUGTOX_PROPERTY', 'Property_Rev';
+EXEC apply_groups $(equivTable), 'PROPERTY_REV', 'CELLMARK_PROPERTY', 'Property_Rev';
 
 -- METHOD column--
 --EXEC dup_column $(equivTable), 'METHOD_TYP', 'METHOD_REV'
 --GO
---EXEC apply_groups $(equivTable), 'METHOD_REV', 'DRUGTOX_METHOD', 'Method_Rev';
+--EXEC apply_groups $(equivTable), 'METHOD_REV', 'CELLMARK_METHOD', 'Method_Rev';
 
 
 -- Build the equivalance class name
