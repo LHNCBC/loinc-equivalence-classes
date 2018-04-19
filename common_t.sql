@@ -84,12 +84,19 @@ CREATE PROCEDURE apply_groups @equivTable nvarchar(255), @equivTableCol nvarchar
 as
 BEGIN
   DECLARE @sql nvarchar(255);
-  -- Remove leading/trailling whitespace and newline characters from the
+  -- Remove leading/trailing whitespace and newline characters from the
   -- groupTableCol field
   SET @sql = N'update '+quotename(@groupTable)+
     N' set '+quotename(@groupTableCol) + N'=RTRIM(LTRIM(REPLACE(REPLACE('+
     quotename(@groupTableCol)+ ', CHAR(13), ''''), CHAR(10), '''')));'
   EXEC (@sql)
+  -- Set NULL values in the Name column of @groupTable to '', so those will
+  -- join.  (There should at most one such record).
+  SET @sql = N'update '+quotename(@groupTable)+
+    N' set Name='''' where Name is null and '+quotename(@groupTableCol)+
+    N' is not null and '+quotename(@groupTableCol)+'!='''''
+  EXEC (@sql)
+  -- Now copy in the values from groupTableCol
   SET @sql = N'UPDATE '+ quotename(@equivTable) + N' set '+quotename(@equivTableCol)+
     N' = g.'+quotename(@groupTableCol)+N' from '+quotename(@equivTable)+' eqv left join '+
     quotename(@groupTable)+N' g on eqv.'+quotename(@equivTableCol)+
