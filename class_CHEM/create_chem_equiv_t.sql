@@ -72,6 +72,6 @@ select @sql = substring(@sql, 1, (len(@sql) - 3)) -- remove last comma
 SET @sql = 'UPDATE #EQUIV_TEMP SET '+@sql + ' where COMPONENT is NULL'
 EXECUTE (@sql)
 
-select heading as 'Heading', EQUIV_CLS, LOINC_NUM, COMPONENT, PROPERTY, PROPERTY_REV,
+select heading as 'Heading', EQUIV_CLS, LOINC_NUM, COMPONENT, EXAMPLE_UCUM_UNITS, PROPERTY, PROPERTY_REV,
  SYSTEM, SYSTEM_REV, METHOD_TYP, METHOD_REV, TIME_ASPCT, TIME_REV, LONG_COMMON_NAME,
  WARNING, SORT_ORDER from #EQUIV_TEMP order by SORT_ORDER, heading desc

@@ -7,11 +7,11 @@ common, shared routines in common_t.sql, and then each subset of LOINC (CHEM,
 UA, etc.) has its own create..._t.sql file for generating result sets.  There is
 some common code in these individual files, which I would like to extract, but
 due to limitations with Transact-SQL (e.g. with dynamic SQL and temporary
-tables) it proved sufficiently difficulti and convoluted (though not
+tables) it proved sufficiently difficult and convoluted (though not
 impossible, I think) that I gave up after a couple of hours.
 
 The code is run in Microsoft SQL Server Management Studio, and the database
-server is ceb-mssql.  I have two databases there, "relma", which is an import of
+server is ceb-mssql.  I have two databases there, "relma", which is an import* of
 the Access database in the RELMA distribution, and "plynch" which is my primary
 database for this work.  Into "plynch" I have imported from RELMA (and/or the
 main LOINC distributions spreadsheet) the LOINC table and the
@@ -57,4 +57,12 @@ the subsets.  Several have the same columns, but not all.
 To avoid accidentally editing previously generated result sets or input files,
 run chmod 444 on the input and results directories when done.
 
+* Notes on importing the relma database:  Download and install the RELMA
+program.  The database file gets placed in
+C:\Users\Public\Documents\RELMA\RELMA.MDB.  Open MS SQL Server Management
+Studio, and delete the existing tables from database "relma" (for each table,
+right click, press d, and then enter).  Right click on relma, and choose
+"Tasks -> Import Data".  Select Access, and and the datafile location.  Select
+SQL Server Native Client (which uses Windows Integrated Authentication), and
+proceed with the import.
 
