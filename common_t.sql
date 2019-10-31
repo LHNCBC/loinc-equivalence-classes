@@ -55,11 +55,31 @@ BEGIN
     EXEC sp_executeSQL @sql
   END;
   SET @sql = N'select * into '+quotename(@tableName)+
-    N' from LOINC where CLASS=@className'
+    N' from [relma].[dbo].[LOINC] where CLASS=@className'
   EXEC sp_executeSQL @sql,
     N'@tableName nvarchar(255), @className nvarchar(255)',
     @tableName = @tableName, @className=@className;
-END;
+  -- Deal with columns that do not allow nulls
+  SET @sql = N'ALTER TABLE '+quotename(@tableName)+' DROP COLUMN ID;'
+  EXEC sp_executeSQL @sql
+  -- Allow nulls (because of header rows)
+  SET @sql = N'ALTER TABLE '+quotename(@tableName)+' ALTER COLUMN LOINC_NUM nvarchar(10) NULL;'
+  EXEC sp_executeSQL @sql
+  SET @sql = N'ALTER TABLE '+quotename(@tableName)+' ALTER COLUMN COMPONENT nvarchar(255) NULL;'
+  EXEC sp_executeSQL @sql
+  SET @sql = N'ALTER TABLE '+quotename(@tableName)+' ALTER COLUMN CLASS nvarchar(255) NULL;'
+  EXEC sp_executeSQL @sql
+  SET @sql = N'ALTER TABLE '+quotename(@tableName)+' ALTER COLUMN [STATUS] nvarchar(255) NULL;'
+  EXEC sp_executeSQL @sql
+  SET @sql = N'ALTER TABLE '+quotename(@tableName)+' ALTER COLUMN CLASSTYPE int NULL;'
+  EXEC sp_executeSQL @sql
+  SET @sql = N'ALTER TABLE '+quotename(@tableName)+' ALTER COLUMN COMMON_TEST_RANK int NULL;'
+  EXEC sp_executeSQL @sql
+  SET @sql = N'ALTER TABLE '+quotename(@tableName)+' ALTER COLUMN COMMON_SI_TEST_RANK int NULL;'
+  EXEC sp_executeSQL @sql
+  SET @sql = N'ALTER TABLE '+quotename(@tableName)+' ALTER COLUMN COMMON_ORDER_RANK int NULL;'
+  EXEC sp_executeSQL @sql
+  END;
 GO
 
 -- Procedure:  Applies group information to a subset of the LOINC table.
