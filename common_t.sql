@@ -30,10 +30,10 @@ BEGIN
   DECLARE @sql nvarchar(255);
   IF COL_LENGTH('plynch.'+@tableName, @colName) IS NOT NULL
   BEGIN
-    SET @sql = 'ALTER TABLE MICRO_EQUIV DROP COLUMN'+quotename(@colName);
+    SET @sql = 'ALTER TABLE '+quotename(@tableName)+' DROP COLUMN'+quotename(@colName);
     EXEC(@sql);
   END
-  SET @sql = 'ALTER TABLE MICRO_EQUIV ADD '+quotename(@colName) + ' nvarchar(255)';
+  SET @sql = 'ALTER TABLE '+quotename(@tableName)+' ADD '+quotename(@colName) + ' nvarchar(255)';
   EXEC(@sql);
 END;
 GO
@@ -64,7 +64,7 @@ GO
 
 -- Procedure:  Applies group information to a subset of the LOINC table.
 -- Parameters:
---   equivTable:  The name of the table that contains as subset of the LOINC
+--   equivTable:  The name of the table that contains a subset of the LOINC
 --     table (with the same class), e.g. SERO_EQUIV.
 --   equivTableCol:  The column (assumed already created with dup_column)
 --     containing a copy of one of the LOINC columns (e.g. METHOD, SYSTEM,
