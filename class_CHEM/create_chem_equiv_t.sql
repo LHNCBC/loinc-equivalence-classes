@@ -6,13 +6,19 @@
 EXEC create_equiv_table $(equivTable), 'CHEM'
 GO
 
+-- Create a component column with the ^* removed
+EXEC dup_column $(equivTable), 'COMPONENT', 'COMPONENT_HATLESS'
+GO
+UPDATE $(equivTable) set COMPONENT_HATLESS = LEFT(COMPONENT_HATLESS, PATINDEX('%^%', COMPONENT_HATLESS)-1)
+  where COMPONENT_HATLESS like '%^%'
+
 -- System column --
 EXEC dup_column $(equivTable), 'SYSTEM', 'SYSTEM_REV'
 GO
 EXEC apply_groups $(equivTable), 'SYSTEM_REV', $(systemTable), 'System_Rev_1';
 -- Apply System_Rev2 if the COMPONENT is in the oxygen component list
 UPDATE $(equivTable) set SYSTEM_REV = g.System_Rev_2 from $(equivTable) left join
-  $(systemTable) g on SYSTEM=g.Name where COMPONENT in (select Name from CHEM_OXYGEN_COMP)
+  $(systemTable) g on SYSTEM=g.Name where COMPONENT_HATLESS in (select Name from CHEM_OXYGEN_COMP)
   and g.System_Rev_2 is not null;
 
 -- Property column --
@@ -24,6 +30,9 @@ EXEC apply_groups $(equivTable), 'PROPERTY_REV', 'CHEM_PROPERTY', 'Property_Rev'
 EXEC dup_column $(equivTable), 'METHOD_TYP', 'METHOD_REV'
 GO
 EXEC apply_groups $(equivTable), 'METHOD_REV', 'CHEM_METHOD', 'Method_Rev';
+GO
+-- Default "method other"
+UPDATE $(equivTable) set Method_Rev = 'Method_Other' where Method_Rev = '';
 
 -- Time column
 EXEC dup_column $(equivTable), 'TIME_ASPCT', 'TIME_REV'
@@ -58,6 +67,10 @@ select EQUIV_CLS as heading, * into #EQUIV_TEMP
 UPDATE #EQUIV_TEMP set heading = '';
 EXEC dup_column '#EQUIV_TEMP', 'EQUIV_CLS', 'SORT_ORDER'
 GO
+
+-- Set NULL values to blank
+UPDATE #EQUIV_TEMP set MOLECULAR_WEIGHT = '' where MOLECULAR_WEIGHT is NULL;
+UPDATE #EQUIV_TEMP set EXAMPLE_UCUM_UNITS = '' where EXAMPLE_UCUM_UNITS is NULL;
 
 -- Add heading rows with count
 :setvar countField SYSTEM_REV
