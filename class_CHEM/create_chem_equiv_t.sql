@@ -38,6 +38,12 @@ UPDATE $(equivTable) set WARNING = g.Comp_Warning from $(equivTable) left join C
   on COMPONENT=g.Name where (Warning_Check = 'Equal' and SYSTEM=Warning_System) OR
   (Warning_Check = 'Not equal' and SYSTEM=Warning_System)
 
+-- Molecular weight column
+ALTER TABLE $(equivTable) ADD MOLECULAR_WEIGHT nvarchar(255);
+GO
+UPDATE $(equivTable) set MOLECULAR_WEIGHT = mw.Molecular_weight_COMBINED from
+   $(equivTable) eq left join CHEM_COMPONENT cc on eq.COMPONENT = cc.Name left join
+   MOLECULAR_WEIGHTS mw on cc.Part = mw.PartNum
 
 -- Build the equivalance class name
 ALTER TABLE $(equivTable) ADD EQUIV_CLS nvarchar(255);
@@ -47,11 +53,12 @@ UPDATE $(equivTable) set EQUIV_CLS=CONCAT(COMPONENT,'|',PROPERTY_REV,'|',SYSTEM_
 -- Sample output, paritioning by the equivalence class for counts and to remove entries with a count of 1
 IF OBJECT_ID('tempdb..#EQUIV_TEMP') IS NOT NULL DROP TABLE #EQUIV_TEMP
 select EQUIV_CLS as heading, * into #EQUIV_TEMP
-  from (select *, count(EQUIV_CLS) over(partition by EQUIV_CLS) as CLS_COUNT From $(equivTable)) t  where CLS_COUNT > 1
+  from (select *, count(EQUIV_CLS) over(partition by EQUIV_CLS) as CLS_COUNT From $(equivTable)) t -- where CLS_COUNT > 1
   order by EQUIV_CLS
 UPDATE #EQUIV_TEMP set heading = '';
 EXEC dup_column '#EQUIV_TEMP', 'EQUIV_CLS', 'SORT_ORDER'
 GO
+
 -- Add heading rows with count
 :setvar countField SYSTEM_REV
 insert into #EQUIV_TEMP (heading, $(countField), SORT_ORDER) select EQUIV_CLS,
@@ -74,4 +81,4 @@ EXECUTE (@sql)
 
 select heading as 'Heading', EQUIV_CLS, LOINC_NUM, COMPONENT, EXAMPLE_UCUM_UNITS, PROPERTY, PROPERTY_REV,
  SYSTEM, SYSTEM_REV, METHOD_TYP, METHOD_REV, TIME_ASPCT, TIME_REV, LONG_COMMON_NAME,
- WARNING, SORT_ORDER from #EQUIV_TEMP order by SORT_ORDER, heading desc
+ MOLECULAR_WEIGHT, WARNING, SORT_ORDER from #EQUIV_TEMP order by SORT_ORDER, heading desc
