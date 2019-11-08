@@ -66,3 +66,21 @@ right click, press d, and then enter).  Right click on relma, and choose
 SQL Server Native Client (which uses Windows Integrated Authentication), and
 proceed with the import.
 
+New Approach (used for DrugTox):
+To try to reduce the work, and also to not rely on a fixed (and outdated) set of
+LOINC Parts, a new approach is being developed for DrugTox.  Currently this
+still relies on some of the stored procedures in common_t.sql, so those need to
+be loaded as described above.  The next stop is to run (from a Windows cmd
+shell, so it can use Windows authentication to access the databases)
+  node class_DrugTox\generate_classes.js
+This will output a results spreadsheet in the class_DrugTox directory.
+Unfortunately, although it is based on results_template.xlsx, the conditional
+formatting is lost.  So this spreadsheet needs to have that restored before it
+is sent.  Also, there is some bug in the Excel processing package that sometimes
+leaves a blank row above the headers, so you might need to delete that row.
+
+The conditional formatting can be copied from results_template.xlsx using the
+"format painter" tool.  In results_template.xlsx, select all, and then click
+"format painter".  Then go to the generated spreadsheet, select the sheet, and
+select all again to copied the formatting.  This will need to be done for both
+sheets.
