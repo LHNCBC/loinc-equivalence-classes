@@ -16,7 +16,7 @@ GO
 EXEC apply_groups $(equivTable), 'SYSTEM_REV', $(systemTable), 'System_Rev_1';
 -- Apply System_Rev2 if the COMPONENTCORE has a non-null STDGrouper value
 UPDATE $(equivTable) set SYSTEM_REV = g.System_Rev_2 from $(equivTable) et left join
-  $(systemTable) g on SYSTEM=g.Name LEFT JOIN LOINC_DETAIL_TYPE_1 ltd on et.LOINC_NUM=ltd.LOINC_NUM
+  $(systemTable) g on SYSTEM=g.Name LEFT JOIN [relma].[dbo].[LOINC_DETAIL_TYPE_1] ltd on et.LOINC_NUM=ltd.LOINC_NUM
   left join MICRO_CoreComponentGroupers ccg on ccg.Name=ltd.COMPONENTCORE
   where ccg.STDGrouper is not null and g.System_Rev_2 is not null;
 
@@ -59,12 +59,12 @@ insert into #EQUIV_TEMP (heading, $(countField), SORT_ORDER) select '', '', EQUI
 -- Set other fields to blank in the heading rows and blank rows except SORT_ORDER (used for sorting)
 -- This avoids having to respecify the fields in the table.
 DECLARE @sql varchar(max)=''
-select @sql= @sql+case when c.name!='heading' and c.name != 'SORT_ORDER' and c.name != '$(countField)' then c.name + '='''',
-' else '' end from tempdb.sys.columns c where object_id =
+select @sql= @sql+case when c.name!='heading' and c.name != 'SORT_ORDER' and c.name != '$(countField)' then c.name + '='''','
+  else '' end from tempdb.sys.columns c where object_id =
 object_id('tempdb..#EQUIV_TEMP');
 
-select @sql = substring(@sql, 1, (len(@sql) - 3)) -- remove last comma
-SET @sql = 'UPDATE #EQUIV_TEMP SET '+@sql + ' where COMPONENT is NULL'
+select @sql = substring(@sql, 1, (len(@sql) - 1)) -- remove last comma
+SET @sql = 'UPDATE #EQUIV_TEMP SET '+@sql + ' where COMPONENT is NULL';
 EXECUTE (@sql)
 
 

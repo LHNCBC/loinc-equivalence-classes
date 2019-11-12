@@ -1,0 +1,29 @@
+{
+  "PROPERTY": {
+    "MCntSCnt": ["MCnt", "SCnt"],
+    "MFrSFr": ["MFr", "SFr"],
+    "MRtoSRto": ["MRto", "SRto"],
+    "MRatSRat": ["MRat", "SRat"],
+    "MassSub": ["Mass", "Sub"],
+    "EntMassEntSub": ["EntMass", "EntSub"],
+    "MFr.DFSFr.DF": ["MFr.DF", "SFr.DF"],
+    "MCDiffSCDiff": ["MCDiff", "SCDiff"],
+    "MCncSqSCncSq": ["MCncSq", "SCncSq"],
+    "MCrtoSCrto": ["MCrto", "SCrto"],
+    "RelMCncRelSCnc": ["RelMCnc", "RelSCnc"],
+    "RelMRatRelSRat": ["RelMRat", "RelSRat"]
+  },
+  "TIME": {
+    "TimedSpecimen": ["10h", "12h", "18h", "1h", "24h", "2h", "48h", "4h", "5h", "6h", "72h", "8h"]
+  },
+  "SYSTEM": {
+    "Arterial*": ["BldA", "BldC", "BldCoA"],
+    "Venous*": ["BldV", "BldMV", "BldCoV", "BldCoMV"]
+  },
+  "SCALE": {
+    "OrdQn": ["Ord", "Qn"]
+  },
+  "METHOD": {
+    "Method-Other": {"skipPatterns": ["Detection limit%", "High sensitivity method", "screen%", "Confirm%"]}
+  }
+}

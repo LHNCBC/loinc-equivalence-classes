@@ -1,0 +1,25 @@
+{
+  "COMPONENT": {
+    "oxygen_related": [
+      "Oxygen content",
+      "Oxygen saturation",
+      "Deoxyhemoglobin,",
+      "Oxyhemoglobin",
+      "Oxygen capacity",
+      "Oxyhemoglobin/Hemoglobin.total",
+      "Oxyhemoglobin/Hemoglobin.total",
+      "Deoxyhemoglobin/Hemoglobin.total",
+      "Oxygen"
+    ]
+  },
+  "SYSTEM": {
+    "Intravascular - any": [
+      "Bld", "BldA", "BldC", "BldMV", "BldP", "BldV", "Bld.dot", "Plas", "PlasA",
+      "PlasV", "Ser", "Ser/Bld", "Ser/Plas", "Ser/Plas/Bld", "Ser/Plas.ultracentrifugal"
+    ],
+    "DuodGastricFld": ["Duod fld/Gast fld", "Duod fld", "Gast fld"],
+    "OcularVitrFld": ["Ocular fld", "Vitr fld"]
+  }
+}
+
+

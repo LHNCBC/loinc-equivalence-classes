@@ -30,10 +30,10 @@ BEGIN
   DECLARE @sql nvarchar(255);
   IF COL_LENGTH('plynch.'+@tableName, @colName) IS NOT NULL
   BEGIN
-    SET @sql = 'ALTER TABLE MICRO_EQUIV DROP COLUMN'+quotename(@colName);
+    SET @sql = 'ALTER TABLE '+quotename(@tableName)+' DROP COLUMN'+quotename(@colName);
     EXEC(@sql);
   END
-  SET @sql = 'ALTER TABLE MICRO_EQUIV ADD '+quotename(@colName) + ' nvarchar(255)';
+  SET @sql = 'ALTER TABLE '+quotename(@tableName)+' ADD '+quotename(@colName) + ' nvarchar(255)';
   EXEC(@sql);
 END;
 GO
@@ -55,16 +55,36 @@ BEGIN
     EXEC sp_executeSQL @sql
   END;
   SET @sql = N'select * into '+quotename(@tableName)+
-    N' from LOINC where CLASS=@className'
+    N' from [relma].[dbo].[LOINC] where CLASS=@className'
   EXEC sp_executeSQL @sql,
     N'@tableName nvarchar(255), @className nvarchar(255)',
     @tableName = @tableName, @className=@className;
-END;
+  -- Deal with columns that do not allow nulls
+  SET @sql = N'ALTER TABLE '+quotename(@tableName)+' DROP COLUMN ID;'
+  EXEC sp_executeSQL @sql
+  -- Allow nulls (because of header rows)
+  SET @sql = N'ALTER TABLE '+quotename(@tableName)+' ALTER COLUMN LOINC_NUM nvarchar(10) NULL;'
+  EXEC sp_executeSQL @sql
+  SET @sql = N'ALTER TABLE '+quotename(@tableName)+' ALTER COLUMN COMPONENT nvarchar(255) NULL;'
+  EXEC sp_executeSQL @sql
+  SET @sql = N'ALTER TABLE '+quotename(@tableName)+' ALTER COLUMN CLASS nvarchar(255) NULL;'
+  EXEC sp_executeSQL @sql
+  SET @sql = N'ALTER TABLE '+quotename(@tableName)+' ALTER COLUMN [STATUS] nvarchar(255) NULL;'
+  EXEC sp_executeSQL @sql
+  SET @sql = N'ALTER TABLE '+quotename(@tableName)+' ALTER COLUMN CLASSTYPE int NULL;'
+  EXEC sp_executeSQL @sql
+  SET @sql = N'ALTER TABLE '+quotename(@tableName)+' ALTER COLUMN COMMON_TEST_RANK int NULL;'
+  EXEC sp_executeSQL @sql
+  SET @sql = N'ALTER TABLE '+quotename(@tableName)+' ALTER COLUMN COMMON_SI_TEST_RANK int NULL;'
+  EXEC sp_executeSQL @sql
+  SET @sql = N'ALTER TABLE '+quotename(@tableName)+' ALTER COLUMN COMMON_ORDER_RANK int NULL;'
+  EXEC sp_executeSQL @sql
+  END;
 GO
 
 -- Procedure:  Applies group information to a subset of the LOINC table.
 -- Parameters:
---   equivTable:  The name of the table that contains as subset of the LOINC
+--   equivTable:  The name of the table that contains a subset of the LOINC
 --     table (with the same class), e.g. SERO_EQUIV.
 --   equivTableCol:  The column (assumed already created with dup_column)
 --     containing a copy of one of the LOINC columns (e.g. METHOD, SYSTEM,
