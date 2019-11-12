@@ -18,7 +18,7 @@ main LOINC distributions spreadsheet) the LOINC table and the
 LOINC_DETAIL_EQUIV_1 table.
 
 For each subset of LOINC (which is created based on LOINC classes, e.g. CHEM),
-I have been given a spreadsheet of "input" data with modified versions the LOINC
+I have been given a spreadsheet of "input" data with modified versions of the LOINC
 SYSTEM, METHOD, and PROPERTY columns (usually named "SYSTEM_Rev", "METHOD_Rev",
 etc., and some other tables.  These input spreadsheets are located in an "input"
 directory on the subset's directory, e.g. class_CHEM/input.  The sheets needed

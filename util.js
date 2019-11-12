@@ -45,8 +45,8 @@ module.exports = function sqlUtilFactory(pool) {
 
 
     /**
-     *  Creates a version of column with the all text starting with ^ ("hat")
-     *  removed.
+     *  Creates a duplicate of the column with the values modified to remove
+     *  text starting with ^ ("hat").
      * @param tableName the name of the table containing the column.  This
      *  parameter is not santized, so only pass trusted strings.
      * @param colName the name of the column to duplicate and modify.  The new column will
@@ -63,7 +63,9 @@ module.exports = function sqlUtilFactory(pool) {
 
 
     /**
-     *  Applies the group definition to the given column.
+     *  Applies the group definition to the given column.  It sets column
+     *  colName to groupValue where the values are currently one of the values
+     *  in colValues (and the optional condition holds).
      * @param table the table containing the column
      * @param colName the column being revised
      * @param colValues the columnValues to be replaced
