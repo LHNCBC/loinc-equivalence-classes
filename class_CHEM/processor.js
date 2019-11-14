@@ -5,16 +5,12 @@
  * @param clsConfig The config file data for this LOINC class.
  */
 module.exports = async function (loincCls, clsConfig) {
-  const sql = require('mssql/msnodesqlv8');
   const equivConfig = require('../config'); // common configuration settings across classes
-  const sqlUtilFactory = require('../util');
+  const util = await require('../util').sqlUtil();
 
-  let pool = await sql.connect({options: {trustedConnection: true}, server: 'ceb-mssql'});
-  let util = sqlUtilFactory(pool);
-  let query = util.query;
-  let {dropTable, request, dupColumn, createHatless, applyGroup,
+  let {query, dropTable, request, dupColumn, createHatless, applyGroup,
     applyGroupSkipPatterns, createEquivClasses, addMolecularWeights,
-    equivSpreadsheet} = util;
+    equivSpreadsheet, closeConnection} = util;
   const equivTable = loincCls.replace(/\//g, '')+'_EQUIV';
 
   try {
@@ -107,6 +103,6 @@ module.exports = async function (loincCls, clsConfig) {
     console.log(e);
   }
   finally {
-    await pool.close();
+    await closeConnection();
   }
 }
