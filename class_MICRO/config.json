@@ -1,0 +1,33 @@
+{
+  "COMPONENTCORE": {
+    "std_causing": ["%HPV E6+E7%", "Chlamydia%", "Haemophilus ducreyi",
+      "Herpes simplex virus%", "Human papilloma virus%", "Mycoplasma genitalium",
+      "Mycoplasma sp%", "Neisseria gonorrhoeae", "Trichomonas sp",
+      "Trichomonas vaginalis", "Ureaplasma%"]
+  },
+  "PROPERTY": {
+    "PrACncTitr": ["PrThr", "ACnc", "Titr"]
+  },
+  "SYSTEM_STD": {
+    "AnalRectalStool": ["Anal", "Anogenital", "Anorectal", "Anorectal/Stool", "Rectum", "Stool"],
+    "Genital": ["Genital", "Genital fld"],
+    "Genital-Female": ["Endometrium", "Genital Lochia", "Vag", "Cvx", "Genital mucus", "Cvm", "Vag+Rectrum"],
+    "Genital-Male": ["Penis", "Prostatic fluid", "Semen (qualify by STD)"],
+    "UrineUrethra": ["Urethra", "Urine", "Urine sediment"]
+  },
+  "SYSTEM": {
+    "BodyFluid": ["Body fld", "XXX.body fluid"],
+    "EyeCorneaConjunctiva": ["Eye", "Crn", "Cnjt"],
+    "Intravascular-any-BPU": ["BPU", "BPU.autologous", "SerPl^bpu"],
+    "Intravascular-any-donor": ["Bld^donor", "Bone^donor", "Plas^donor", "Ser/Plas^donor", "Ser^donor"],
+    "IntravascularLine": ["Catheter tip", "Line"],
+    "LungTissue": ["Lung", "Lung tiss"],
+    "Resp": ["Respiratory", "Sputum"],
+    "Resp-Lower": ["BAL", "Bronchial", "Bronchial brush", "Respiratory.lower", "Sptt", "Sputum/Bronchial"],
+    "Resp-Upper": ["Nose", "Nph", "Pharynx", "Respiratory.upper", "Thrt"],
+    "SmallLargeIntestineBx": ["TGLI/TSMI", "TSMI"],
+    "Tissue": ["Tissue", "XXX.tissue"],
+    "TubesDrains": ["Cannula specimen", "Drain"],
+    "WoundUlcer": ["Wound", "Wound.deep", "Wound.shlw", "Ulc"]
+  }
+}
