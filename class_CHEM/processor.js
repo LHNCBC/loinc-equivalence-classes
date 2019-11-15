@@ -10,7 +10,7 @@ module.exports = async function (loincCls, clsConfig) {
 
   let {query, dropTable, request, dupColumn, createHatless, applyGroup,
     applyGroupSkipPatterns, createEquivClasses, addMolecularWeights,
-    equivSpreadsheet, closeConnection} = util;
+    equivSpreadsheet, closeConnection, dupAndApplyGroups} = util;
   const equivTable = loincCls.replace(/\//g, '')+'_EQUIV';
 
   try {
@@ -26,9 +26,7 @@ module.exports = async function (loincCls, clsConfig) {
     await request().input('tableName', equivTable).input('className', loincCls).execute('create_equiv_table');
 
     // PROPERTY_REV
-    await dupColumn(equivTable, 'PROPERTY', 'PROPERTY_REV');
-    for (let group of Object.keys(clsConfig.PROPERTY))
-      await applyGroup(equivTable, 'PROPERTY_REV', clsConfig.PROPERTY[group], group);
+    await dupAndApplyGroups(equivTable, 'PROPERTY', clsConfig.PROPERTY);
     // One of the property groups equivlances MFr.DF and SFr.DF with non-DF
     // equivalents.  We need to set units for the DF entries for the conversion
     // to work.
@@ -36,9 +34,7 @@ module.exports = async function (loincCls, clsConfig) {
        "PROPERTY = 'MFr.DF' or PROPERTY = 'SFr.DF'");
 
     // TIME_REV
-    await dupColumn(equivTable, 'TIME_ASPCT', 'TIME_REV');
-    for (let group of Object.keys(clsConfig.TIME))
-      await applyGroup(equivTable, 'TIME_REV', clsConfig.TIME[group], group);
+    await dupAndApplyGroups(equivTable, 'TIME_ASPCT', clsConfig.TIME);
 
     // SYSTEM_REV
     await dupColumn(equivTable, 'SYSTEM', 'SYSTEM_REV');
@@ -53,9 +49,7 @@ module.exports = async function (loincCls, clsConfig) {
       await applyGroup(equivTable, 'SYSTEM_REV', clsConfig.SYSTEM[group], group, condition);
 
     // SCALE_REV
-    await dupColumn(equivTable, 'SCALE_TYP', 'SCALE_REV');
-    for (let group of Object.keys(clsConfig.SCALE))
-      await applyGroup(equivTable, 'SCALE_REV', clsConfig.SCALE[group], group);
+    await dupAndApplyGroups(equivTable, 'SCALE_TYP', clsConfig.SCALE);
 
     // METHOD_REV
     await dupColumn(equivTable, 'METHOD_TYP', 'METHOD_REV');

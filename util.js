@@ -68,7 +68,7 @@ module.exports = {
        *  Applies the group definition to the given column.  It sets column
        *  colName to groupValue where the values are currently one of the values
        *  in colValues (and the optional condition holds).
-       * @param table the table containing the column
+       * @param tableName the table containing the column
        * @param colName the column being revised
        * @param colValues the columnValues to be replaced
        * @param groupValue the new value replacing occurrences of colValues
@@ -90,6 +90,39 @@ module.exports = {
             sql += ' AND ('+condition+')';
           await req.query(sql);
         }
+      },
+
+
+      /**
+       *  Calls applyGroup for the groups defined in "groups".
+       * @param tableName the table containing the column being revised
+       * @param colName the column being revised
+       * @param groups the groups to apply.  This should be a hash from group
+       *  names to array of column values that should be replaced with the group
+       *  name.
+       * @param condition and additional SQL string to limit the places the
+       *  replacement is made.
+       */
+      applyGroups: async function(tableName, colName, groups, condition) {
+        for (let group of Object.keys(groups))
+          await rtn.applyGroup(tableName, colName, groups[group], group, condition);
+      },
+
+
+      /**
+       *  Duplicates the given column and applies the groups for that column.
+       * @param equivTable the name of the equivalence table being constructed
+       * @param colName the column name to duplicate and modify
+       * @param groups the groups to apply.  This should be a hash from group
+       *  names to array of column values that should be replaced with the group
+       *  name.
+       */
+      dupAndApplyGroups: async function (equivTable, colName, groups) {
+        // Remove _TYP or _ASPCT from the colName before appending _REV
+        const colNameBase = colName.replace(/_(TYP|ASPCT)$/, '');
+        const modColName = colNameBase + '_REV';
+        await rtn.dupColumn(equivTable, colName, modColName);
+        await rtn.applyGroups(equivTable, modColName, groups);
       },
 
 
@@ -207,7 +240,9 @@ module.exports = {
             outputCols.push('SCALE_TYP', 'SCALE_REV');
           if (colNames['METHOD_REV'])
             outputCols.push('METHOD_TYP', 'METHOD_REV');
-          outputCols.push('LONG_COMMON_NAME', 'MOLECULAR_WEIGHT');
+          outputCols.push('LONG_COMMON_NAME')
+          if (colNames['MOLECULAR_WEIGHT'])
+            outputCols.push('MOLECULAR_WEIGHT');
           if (colNames['WARNING'])
             outputCols.push('WARNING');
           outputCols.push('SORT_ORDER');
@@ -242,6 +277,7 @@ module.exports = {
         let outputFile = loincCls + '_results-'+d.getFullYear()+'-'+month+'-'+date+'.xlsx';
         await workbook.xlsx.writeFile(path.join(__dirname, clsSubDir, outputFile));
       },
+
 
       /**
        *  Closes the connetion with the server.
