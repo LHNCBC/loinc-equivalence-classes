@@ -1,0 +1,23 @@
+{
+  "name": "loinc-equivalence-classes",
+  "version": "1.0.0",
+  "description": "Notes on procedure for generating equivalence classes",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@git-scm.nlm.nih.gov:7999/lfor/loinc-equivalence-classes.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "exceljs": "^3.3.1",
+    "msnodesqlv8": "^0.8.4",
+    "mssql": "^6.0.0"
+  }
+}

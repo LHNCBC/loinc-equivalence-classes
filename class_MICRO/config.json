@@ -1,0 +1,69 @@
+{
+  "COMPONENTCORE": {
+    "std_causing": ["%HPV E6+E7%", "Chlamydia%", "Haemophilus ducreyi",
+      "Herpes simplex virus%", "Human papilloma virus%", "Mycoplasma genitalium",
+      "Mycoplasma sp%", "Neisseria gonorrhoeae", "Trichomonas sp",
+      "Trichomonas vaginalis", "Ureaplasma%"]
+  },
+  "PROPERTY": {
+    "PrACncTitr": ["PrThr", "ACnc", "Titr"]
+  },
+  "SYSTEM_STD": {
+    "AnalRectalStool": ["Anal", "Anogenital", "Anorectal", "Anorectal/Stool", "Rectum", "Stool"],
+    "Genital": ["Genital", "Genital fld"],
+    "Genital-Female": ["Endometrium", "Genital Lochia", "Vag", "Cvx", "Genital mucus", "Cvm", "Vag+Rectrum"],
+    "Genital-Male": ["Penis", "Prostatic fluid", "Semen (qualify by STD)"],
+    "UrineUrethra": ["Urethra", "Urine", "Urine sediment"]
+  },
+  "SYSTEM": {
+    "BodyFluid": ["Body fld", "XXX.body fluid"],
+    "EyeCorneaConjunctiva": ["Eye", "Crn", "Cnjt"],
+    "Intravascular-any-BPU": ["BPU", "BPU.autologous", "SerPl^bpu"],
+    "Intravascular-any-donor": ["Bld^donor", "Bone^donor", "Plas^donor", "Ser/Plas^donor", "Ser^donor"],
+    "IntravascularLine": ["Catheter tip", "Line"],
+    "LungTissue": ["Lung", "Lung tiss"],
+    "Resp": ["Respiratory", "Sputum"],
+    "Resp-Lower": ["BAL", "Bronchial", "Bronchial brush", "Respiratory.lower", "Sptt", "Sputum/Bronchial"],
+    "Resp-Upper": ["Nose", "Nph", "Pharynx", "Respiratory.upper", "Thrt"],
+    "SmallLargeIntestineBx": ["TGLI/TSMI", "TSMI"],
+    "Tissue": ["Tissue", "XXX.tissue"],
+    "TubesDrains": ["Cannula specimen", "Drain"],
+    "WoundUlcer": ["Wound", "Wound.deep", "Wound.shlw", "Ulc"]
+  },
+  "METHOD": {
+    "Aerobic cult": ["Aerobic culture", "Aerobic culture 25 deg C incubation"],
+    "AFB stains": ["Acid fast stain", "Acid fast stain", "Acid fast stain.Kinyoun", "Acid fast stain.Kinyoun modified", "Acid fast stain. Ziehl-Neelsen", "Carbol-fuchsin stain", "Kinyoun stain", "Night blue stain", "Rhodamine stain", "Rhodamine-auramine fluorochrome stain", "Wade stain"],
+    "Aggl": ["Aggl", "Aggl.rapid", "Aggl.micro", "HA", "HAI", "LA", "Sheep cell aggl"],
+    "Anaerobic cult": ["Anaerobic culture ", "Anaerobic culture 25 deg C incubation"],
+    "Anthrax stain": ["M'Fadyean stain"],
+    "Blood film": ["Malaria smear"],
+    "Blood film – Thick": ["Malaria thick smear", "Thick film"],
+    "Blood film – Thin": ["Malaria thin smear", "thin film"],
+    "Chlamydia-Rickettsia stain": ["Macchiavello stain"],
+    "CSF gram negatives stain": ["Methylene blue stain. Loeffler", "Neisser stain"],
+    "Cult": ["Anaerobic+Aerobic Culture", "Biopsy Culture", "Culture", "Culture @1:100", "Culture.FDA method", "Cytotoxin tissue culture assay", "Intravascular line culture", "Organism specific culture"],
+    "Diphtheria": ["Alberts stain", "Methylene blue stain.Loeffler", "Neisser stain"],
+    "Elph ": ["Electrophoresis", "Immunoelectrophoresis", "PAGE", "PFGE"],
+    "EM Virus stain": ["Microscopy.electron", "Microscopy.electron.negative stain", "Microscopy.electron.thin section"],
+    "Endospore stain": ["Malachite green stain"],
+    "Fungal stains": ["Calcofluor white preparation", "Fungus stain"],
+    "Giemsa or Acridine orange stains": ["Acridine orange   Giemsa stain", "Acridine orange stain", "Giemsa stain", "Giemsa stain.3 micron", "Giemsa stain. May-Grunwald", "Modified Giemsa", "Wright Giemsa stain"],
+    "Gram stains": ["Crystal violet stain", "Gram stain"],
+    "HBsAG stain": ["Orcein stain"],
+    "IA--IF-Null*": ["CIE", "EIA", "EIA.RST", "EMIA", "IA", "IA.rapid", "IF", "Rapid", "RIA", "RIPA"],
+    "IB*": ["IB", "IB.test strip"],
+    "Immune diffusion": ["ID", "Immune diffusion"],
+    "Intestinal parasite stains": ["Brilliant cresyl blue", "Safranin stain", "Trichrome stain modified", "Trichrome stain", "Trichrome stain", "Gomori-Wheatley", "Trichrome stain.Masson", "Trichrome stain.Masson modified"],
+    "Leprosy stain": ["Fite-Faraco stain"],
+    "Light microscopy": ["Microscopy.light", "Microscopy.light.HPF", "Microscopy.light.LPF"],
+    "Molecular genetics": ["Amplification/Sequencing", "Molgen", "Probe.amp", "Probe.amp.sig", "Probe.amp.tar", "Probe.mag capture", "Sequencing"],
+    "PCP and yeast": ["Methenamine silver nitrate stain", "Methenamine silver stain.Grocott", "Methenamine silver stain.Jones"],
+    "Resp Cult": ["ARDS Cult", "CF Resp Cult", "Resp Cult"],
+    "Seratia species": ["Methyl green stain", "Methyl green-pyronine Y stain"],
+    "Silver stains": ["Silver impregnation stain.Dieterle", "Silver nitrate stain", "Silver stain", "Silver stain.Fontana-Masson", "Silver stain.Grimelius", "Steiner stain", "Warthin-Starry stain"],
+    "Skin Fungi": ["KOH Preparation"],
+    "Viral cult": ["Shell vial culture"],
+    "Viral smear-HSV+VZV": ["Tzanck smear"],
+    "Yersinia pestis stains": ["Wayson stain"]
+  }
+}
