@@ -1,15 +1,16 @@
 {
   "COMPONENT": {
     "oxygen_related": [
+      "Oxygen",
       "Oxygen content",
       "Oxygen saturation",
+      "Oxygen saturation.calc from carbon dioxide.partial pressure",
       "Deoxyhemoglobin,",
-      "Oxyhemoglobin",
       "Oxygen capacity",
+      "Oxyhemoglobin",
       "Oxyhemoglobin/Hemoglobin.total",
       "Oxyhemoglobin/Hemoglobin.total",
-      "Deoxyhemoglobin/Hemoglobin.total",
-      "Oxygen"
+      "Deoxyhemoglobin/Hemoglobin.total"
     ]
   },
   "SYSTEM": {
@@ -21,5 +22,3 @@
     "OcularVitrFld": ["Ocular fld", "Vitr fld"]
   }
 }
-
-

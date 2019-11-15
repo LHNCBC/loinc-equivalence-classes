@@ -1,0 +1,36 @@
+{
+  "PROPERTY": {
+    "MCntSCnt": ["MCnt", "SCnt"],
+    "MFrSFr": ["MFr", "SFr", "MFr.DF", "SFr.DF"],
+    "MRtoSRto": ["MRto", "SRto"],
+    "MRatSRat": ["MRat", "SRat"],
+    "MassSub": ["Mass", "Sub"],
+    "EntMassEntSub": ["EntMass", "EntSub"],
+    "MCDiffSCDiff": ["MCDiff", "SCDiff"],
+    "MCncSqSCncSq": ["MCncSq", "SCncSq"],
+    "MCrtoSCrto": ["MCrto", "SCrto"],
+    "RelMCncRelSCnc": ["RelMCnc", "RelSCnc"],
+    "RelMRatRelSRat": ["RelMRat", "RelSRat"]
+  },
+  "TIME": {
+    "TimedSpecimen": ["10h", "12h", "18h", "1h", "24h", "2h", "48h", "4h", "5h", "6h", "72h", "8h"]
+  },
+  "SYSTEM": {
+    "Arterial*": ["BldA", "BldC", "BldCoA"],
+    "Venous*": ["BldV", "BldMV", "BldCoV", "BldCoMV"]
+  },
+  "SCALE": {
+    "NarDocOrdQn": ["Nar", "Doc", "Ord", "Qn"]
+  },
+  "METHOD": {
+    "Method-Other": {"skipPatterns": ["Detection limit%", "High sensitivity method", "screen%", "Confirm%"]}
+  },
+  "warning": [
+    {"message": "Most labs report Ammonia in System:Plas. Please check to see if Plas may be the proper specimen.",
+     "conditions": {"SYSTEM": ["Bld", "Ser"], "COMPONENT": ["Ammonia"]}},
+    {"message": "Most labs report Ammonium in System:Plas. Please check to see if Plas may be the proper specimen.",
+     "conditions": {"SYSTEM": ["Bld"], "COMPONENT": ["Ammonium", "Ammonium ion"]}},
+    {"message": "Most labs report Folate in System:Ser. Please check to see if Ser may be the proper specimen.",
+     "conditions": {"SYSTEM": ["Bld"], "COMPONENT": ["Folate"]}}
+  ]
+}
