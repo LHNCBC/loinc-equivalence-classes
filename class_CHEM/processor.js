@@ -49,7 +49,8 @@ module.exports = async function (loincCls, clsConfig) {
       await applyGroup(equivTable, 'SYSTEM_REV', clsConfig.SYSTEM[group], group, condition);
 
     // SCALE_REV
-    await dupAndApplyGroups(equivTable, 'SCALE_TYP', clsConfig.SCALE);
+    if (clsConfig.SCALE)
+      await dupAndApplyGroups(equivTable, 'SCALE_TYP', clsConfig.SCALE);
 
     // METHOD_REV
     await dupColumn(equivTable, 'METHOD_TYP', 'METHOD_REV');
@@ -58,8 +59,12 @@ module.exports = async function (loincCls, clsConfig) {
     await applyGroupSkipPatterns(equivTable, 'METHOD_REV', skipPatterns, groupName);
 
     // Equivalance class name
-    await createEquivClasses(equivTable, ['COMPONENT_HATLESS','PROPERTY_REV','TIME_REV',
-      'SYSTEM_REV','SCALE_REV','METHOD_REV'])
+    let classCols = ['COMPONENT_HATLESS','PROPERTY_REV','TIME_REV',
+      'SYSTEM_REV'];
+    if (clsConfig.SCALE)
+      classCols.push('SCALE_REV')
+    classCols.push('METHOD_REV');
+    await createEquivClasses(equivTable, classCols);
 
     // Molecular weights column
     await addMolecularWeights(equivTable);

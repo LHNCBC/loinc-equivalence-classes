@@ -20,5 +20,8 @@
     ],
     "DuodGastricFld": ["Duod fld/Gast fld", "Duod fld", "Gast fld"],
     "OcularVitrFld": ["Ocular fld", "Vitr fld"]
+  },
+  "SCALE": {
+    "OrdNomNarDoc": ["Ord", "Nom", "Nar", "Doc"]
   }
 }
