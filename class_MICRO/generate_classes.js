@@ -1,3 +1,7 @@
+// TBD - When this is next done, this script should be revised to use
+// "genTableAndResults"; see ABXBACT for an example.
+
+// A program to generate equivalence classes.
 const loincCls = 'MICRO';
 const clsConfig = require('./config');
 const equivConfig = require('../config'); // common configuration settings across classes

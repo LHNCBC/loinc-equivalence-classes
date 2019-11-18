@@ -152,6 +152,32 @@ module.exports = {
 
 
       /**
+       *   Revises a column values to all be the same shared name (groupValue)
+       *   except where the existing value matches one of the values in
+       *   skipValues.
+       * @param table the table containing the column
+       * @param colName the column being revised
+       * @param skipValues an array of values to be skipped
+       * @param groupValue the new value replacing values in colName
+       */
+      applyGroupSkipValues: async function(tableName, colName, skipValues, groupValue) {
+        let sql = 'UPDATE '+ tableName + ' set '+colName+ " = '"+groupValue+"'";
+        let req = rtn.request();
+        for (let i=0, len=skipValues.length; i<len; ++i) {
+          sql += i===0 ? ' WHERE ' : ' AND ';
+          let varName = 'var'+i;
+          req.input(varName, skipValues[i]);
+          sql += colName + " != @"+varName;
+        }
+        console.log(sql);
+        await req.query(sql);
+      },
+
+
+
+
+
+      /**
        *  Creates the equivalence class column and generates the equivalance class
        *  values.
        * @param tableName the table to which the column will be added
@@ -209,7 +235,7 @@ module.exports = {
           await rtn.query(sql);
 
           // Add heading rows with count
-          let countField = 'SYSTEM_REV';
+          let countField = 'LONG_COMMON_NAME';
           await rtn.query("insert into #EQUIV_TEMP (heading, "+countField+", SORT_ORDER) select EQUIV_CLS,\n"+
             "count(EQUIV_CLS), EQUIV_CLS as EQUIV_CLS from #EQUIV_TEMP group by EQUIV_CLS;");
 
@@ -298,5 +324,43 @@ module.exports = {
     const sql = require('mssql/msnodesqlv8');
     let pool = await sql.connect({options: {trustedConnection: true}, server: 'ceb-mssql'});
     return module.exports.sqlUtilFactory(pool);
+  },
+
+
+  /**
+   *  Establishes an SQL connection, creates the equivalence table, applies the
+   *  given editing function to the table, and generates the results output
+   *  spreadsheet.
+   * @param loincCls the name of the LOINC class for which we are creating
+   *  equivalence classes.
+   * @param equivNameCols an array of column names to use in constructing the
+   *  equivalence class name.
+   * @param editFn the function that will be used to edit the equivalence class
+   *  table.  This will be passed the name of the table and the return value of
+   *  "sqlUtil".
+   */
+  genTableAndResults: async function(loincCls, equivNameCols, editFn) {
+    const util = await module.exports.sqlUtil();
+    let {request, createEquivClasses, equivSpreadsheet, closeConnection} = util;
+    try {
+      // Create the table
+      const equivTable = loincCls + '_EQUIV';
+      await request().input('tableName', equivTable).input('className', loincCls).execute('create_equiv_table');
+
+      // Edit the table
+      await editFn(equivTable, util);
+
+      // Equivalance class name
+      await createEquivClasses(equivTable, equivNameCols)
+
+      // Genereate the output
+      await equivSpreadsheet(equivTable);
+    }
+    catch (e) {
+      console.log(e);
+    }
+    finally {
+      await closeConnection();
+    }
   }
 }
