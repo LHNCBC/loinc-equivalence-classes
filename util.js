@@ -88,6 +88,7 @@ module.exports = {
           sql += ')';
           if (condition)
             sql += ' AND ('+condition+')';
+          console.log(sql);
           await req.query(sql);
         }
       },
