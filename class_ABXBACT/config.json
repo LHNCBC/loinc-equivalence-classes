@@ -1,0 +1,8 @@
+{
+  "SCALE": {
+    "Scale-Other": {"skip": ["Nom"]}
+  },
+  "METHOD": {
+    "Method-Other": {"skip": ["Genotyping", "Method for Slow-growing mycobacteria"]}
+  }
+}

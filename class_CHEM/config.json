@@ -19,9 +19,6 @@
     "Arterial*": ["BldA", "BldC", "BldCoA"],
     "Venous*": ["BldV", "BldMV", "BldCoV", "BldCoMV"]
   },
-  "SCALE": {
-    "NarDocOrdQn": ["Nar", "Doc", "Ord", "Qn"]
-  },
   "METHOD": {
     "Method-Other": {"skipPatterns": ["Detection limit%", "High sensitivity method", "screen%", "Confirm%"]}
   },
