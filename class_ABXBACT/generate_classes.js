@@ -4,7 +4,7 @@ const loincCls = 'ABXBACT';
 require('../util').genTableAndResults(loincCls, ['COMPONENT', 'SCALE_REV', 'METHOD_REV'],
   async function(equivTable, util) {
 
-  const clsConfig = require('./config'); // common configuration settings across classes
+  const clsConfig = require('./config');
 
   let {dupColumn, applyGroupSkipValues} = util;
 
