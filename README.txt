@@ -66,7 +66,7 @@ right click, press d, and then enter).  Right click on relma, and choose
 SQL Server Native Client (which uses Windows Integrated Authentication), and
 proceed with the import.
 
-New Approach (used for classes ABXBACT, ALLERGY, CELLMARK, CHEM, DRUG/TOX, and MICRO):
+New Approach (used for classes ABXBACT, ALLERGY, CELLMARK, COAG, CHEM, DRUG/TOX, and MICRO):
 To try to reduce the work, and also to not rely on a fixed (and outdated) set of
 LOINC Parts, a new approach is being developed.  Currently this
 still relies on some of the stored procedures in common_t.sql, so those need to
