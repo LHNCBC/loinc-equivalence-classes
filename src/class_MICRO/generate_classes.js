@@ -54,7 +54,8 @@ const equivConfig = require('../config'); // common configuration settings acros
     await equivSpreadsheet(equivTable);
   }
   catch (e) {
-    console.log(e);
+    console.error(e);
+    process.exit(1); // signal error
   }
   finally {
     await closeConnection();

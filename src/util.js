@@ -294,15 +294,8 @@ module.exports = {
         }
 
         // Write the output file
-        let d = new Date();
-        let month = '' + (d.getMonth() + 1);
-        if (month.length < 2)
-          month = '0'+month;
-        let date = '' +d.getDate();
-        if (date.length < 2)
-          date = '0' + date;
-        let outputFile = loincCls + '_results-'+d.getFullYear()+'-'+month+'-'+date+'.xlsx';
-        await workbook.xlsx.writeFile(path.join(__dirname, clsSubDir, outputFile));
+        await workbook.xlsx.writeFile(path.join(__dirname, clsSubDir,
+          module.exports.resultsFilename(loincCls)));
       },
 
 
@@ -357,10 +350,27 @@ module.exports = {
       await equivSpreadsheet(equivTable);
     }
     catch (e) {
-      console.log(e);
+      console.error(e);
+      process.exit(1); // signal error
     }
     finally {
       await closeConnection();
     }
+  },
+
+
+  /**
+   *  Returns the results filename, given the class name.
+   * @param loincCls the LOINC class name
+   */
+  resultsFilename: function (loincCls) {
+    let d = new Date();
+    let month = '' + (d.getMonth() + 1);
+    if (month.length < 2)
+      month = '0'+month;
+    let date = '' +d.getDate();
+    if (date.length < 2)
+      date = '0' + date;
+    return loincCls + '_results-'+d.getFullYear()+'-'+month+'-'+date+'.xlsx';
   }
 }

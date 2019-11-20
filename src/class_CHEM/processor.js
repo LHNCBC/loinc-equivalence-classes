@@ -18,12 +18,13 @@ module.exports = async function (loincCls, clsConfig) {
 
   try {
     // Create OXYGEN_COMP table
-    await dropTable('OXYGEN_COMP');
-    await query('CREATE TABLE OXYGEN_COMP (Name nvarchar(255))');
+    await query('CREATE TABLE #OXYGEN_COMP (Name nvarchar(255))');
     let oxygenStrings = equivConfig.COMPONENT.oxygen_related;
-    let promises = oxygenStrings.map(async o2 => {await request().input('o2', o2).
-      query('INSERT INTO OXYGEN_COMP VALUES (@o2)');});
-    await Promise.all(promises);
+    for (let i=0, len=oxygenStrings.length; i<len; ++i) {
+      await request().input('o2', oxygenStrings[i]).query('INSERT INTO #OXYGEN_COMP VALUES (@o2)');
+    };
+
+    let promises// = oxygenStrings.map(async function(o2) {//    await Promise.all(promises);
 
     // Create the start of the equivalence class table
     await request().input('tableName', equivTable).input('className', loincCls).execute('create_equiv_table');
@@ -47,7 +48,7 @@ module.exports = async function (loincCls, clsConfig) {
     // For COMPONENTS in the oxygen group, we use different groups.  (Not really
     // needed for DrugTox, but will run the same code as for CHEM).
     await createHatless(equivTable, 'COMPONENT');
-    let condition = 'COMPONENT_HATLESS in (select Name from OXYGEN_COMP)'
+    let condition = 'COMPONENT_HATLESS in (select Name from #OXYGEN_COMP)'
     for (let group of ["Arterial*", "Venous*"])
       await applyGroup(equivTable, 'SYSTEM_REV', clsConfig.SYSTEM[group], group, condition);
 
@@ -102,7 +103,8 @@ module.exports = async function (loincCls, clsConfig) {
     await equivSpreadsheet(equivTable);
   }
   catch (e) {
-    console.log(e);
+    console.error(e);
+    process.exit(1); // signal error
   }
   finally {
     await closeConnection();
