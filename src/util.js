@@ -256,7 +256,10 @@ module.exports = {
           let colData = await rtn.query("select * from tempdb.sys.columns c where object_id =\n"+
             "object_id('tempdb..#EQUIV_TEMP')");
           let colNames = colData.recordsets[0].reduce((acc, row)=>{acc[row.name] = true; return acc}, {});
-          let outputCols = ['EQUIV_CLS', 'LOINC_NUM', 'COMPONENT', 'EXAMPLE_UCUM_UNITS'];
+          let outputCols = ['EQUIV_CLS', 'LOINC_NUM', 'COMPONENT']
+          if (colNames['COMPONENT_REV'])
+            outputCols.push('COMPONENT_REV');
+          outputCols.push('EXAMPLE_UCUM_UNITS');
           if (colNames['PROPERTY_REV'])
             outputCols.push('PROPERTY', 'PROPERTY_REV');
           if (colNames['TIME_REV'])

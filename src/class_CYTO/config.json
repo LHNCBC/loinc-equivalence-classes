@@ -1,0 +1,9 @@
+{
+  "COMPONENT": {
+    "MicroCyto": ["Microscopic observation", "Cytology report"]
+  },
+  "SYSTEM": {
+    "Genital-Female": ["Cvx/Vag", "Vag", "Cvx"],
+    "Resp-Lower": ["BAL", "Bronchial", "Bronchial brush", "Sputum"]
+  }
+}
