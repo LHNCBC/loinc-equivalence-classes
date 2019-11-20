@@ -1,4 +1,8 @@
-Notes on procedure for generating equivalence classes
++Notes on procedure for generating equivalence classes
+
+[Note:  The first part of this document describes the old appraoch.  There is a
+new approach under development which is described at the end, and is to be followed
+instead for certain classes.]
 
 The SQL routines are written in Transact-SQL, originally selected because Clem
 requested the use of the "partition by" syntax.  The code now uses temporary
