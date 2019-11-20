@@ -1,0 +1,11 @@
+{
+  "PROPERTY": {
+    "PrTitrACnc": ["Pr", "Titr", "ACnc"]
+  },
+  "SYSTEMCORE": {
+    "Intravascular - any": ["Bld", "BldC", "Ser", "Plas", "PPP", "PRP", "Ser/Plas", "PPP/Bld"]
+  },
+  "METHOD": {
+    "Method-Other": {"skip": ["Thromboelastography"]}
+  }
+}

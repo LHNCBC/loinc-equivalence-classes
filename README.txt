@@ -1,4 +1,8 @@
-Notes on procedure for generating equivalence classes
++Notes on procedure for generating equivalence classes
+
+[Note:  The first part of this document describes the old appraoch.  There is a
+new approach under development which is described at the end, and is to be followed
+instead for certain classes.]
 
 The SQL routines are written in Transact-SQL, originally selected because Clem
 requested the use of the "partition by" syntax.  The code now uses temporary
@@ -66,7 +70,7 @@ right click, press d, and then enter).  Right click on relma, and choose
 SQL Server Native Client (which uses Windows Integrated Authentication), and
 proceed with the import.
 
-New Approach (used for classes ALLERGY, CHEM, DRUG/TOX, and MICRO):
+New Approach (used for classes ABXBACT, ALLERGY, CELLMARK, COAG, CHEM, DRUG/TOX, and MICRO):
 To try to reduce the work, and also to not rely on a fixed (and outdated) set of
 LOINC Parts, a new approach is being developed.  Currently this
 still relies on some of the stored procedures in common_t.sql, so those need to
