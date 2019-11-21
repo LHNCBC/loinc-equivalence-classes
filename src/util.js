@@ -81,6 +81,7 @@ module.exports = {
        */
       applyGroup: async function(tableName, colName, colValues, groupValue, condition) {
         if (colValues.length > 1) {
+          // First do the update where there are no subparts.
           let sql = 'UPDATE '+ tableName + ' set '+colName+ " = '"+groupValue+"'";
           let req = rtn.request();
           for (let i=0, len=colValues.length; i<len; ++i) {
@@ -88,6 +89,23 @@ module.exports = {
             let varName = 'var'+i;
             req.input(varName, colValues[i]);
             sql += colName + '=@'+varName;
+          }
+          sql += ')';
+          if (condition)
+            sql += ' AND ('+condition+')';
+          console.log(sql);
+          await req.query(sql);
+
+          // Now handle the values with subparts.  We want to preserve the
+          // subparts (which follow "^" in the field's text).
+          sql = 'UPDATE '+ tableName + ' set '+colName+ " = concat('"+groupValue+
+            "', SUBSTRING("+colName+", PATINDEX('%^%',"+colName+"), len("+colName+")))";
+          req = rtn.request();
+          for (let i=0, len=colValues.length; i<len; ++i) {
+            sql += i===0 ? ' WHERE (' : ' OR ';
+            let varName = 'var'+i;
+            req.input(varName, colValues[i]);
+            sql += '@' + varName + "=SUBSTRING("+colName+", 0, PATINDEX('%^%', "+colName+"))"
           }
           sql += ')';
           if (condition)
