@@ -7,8 +7,6 @@ const path = require('path');
 let classDirs = fs.readdirSync(__dirname).filter(
   f=>f.match(/^class_/) && fs.existsSync(path.join(__dirname, f, 'generate_classes.js')));
 
-console.log(classDirs);
-
 (async function() {
   const util = await require('./util').sqlUtil();
   const {query, closeConnection} = util;
@@ -26,17 +24,10 @@ console.log(classDirs);
     if (!qRes.recordset)
       throw Error('The stored procedures are missing.  Please load them from common_t.sql');
 
-    // Run the CHEM generation first.  It shares code with DRUG/TOX and both try
-    // to create the same table.
+    // At the point, the class-specific routines can run concurrently.
     const cp = require('child_process');
     const util = require('util');
     const exec = util.promisify(cp.exec);
-    /*
-    await exec('node '+
-      path.join(__dirname, 'class_CHEM', 'generate_classes.js')));
-    classDirs.
-   */
-    // At the point, the class-specific routines can run concurrently.
     let genProcs = [];
     classDirs.forEach(d=>genProcs.push(exec('node '+
       path.join(__dirname, d, 'generate_classes.js'))));
