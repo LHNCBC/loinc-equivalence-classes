@@ -1,3 +1,7 @@
+const fs = require('fs');
+const path = require('path');
+const resultsDir = path.join(__dirname, '../results');
+
 module.exports = {
   /**
    *  Returns an object of utility functions used by the various
@@ -297,7 +301,9 @@ module.exports = {
         }
 
         // Write the output file
-        await workbook.xlsx.writeFile(path.join(__dirname, clsSubDir,
+        if (!fs.existsSync(resultsDir))
+          fs.mkdirSync(resultsDir);
+        await workbook.xlsx.writeFile(path.join(resultsDir,
           module.exports.resultsFilename(loincCls)));
       },
 
@@ -367,13 +373,6 @@ module.exports = {
    * @param loincCls the LOINC class name
    */
   resultsFilename: function (loincCls) {
-    let d = new Date();
-    let month = '' + (d.getMonth() + 1);
-    if (month.length < 2)
-      month = '0'+month;
-    let date = '' +d.getDate();
-    if (date.length < 2)
-      date = '0' + date;
-    return loincCls + '_results-'+d.getFullYear()+'-'+month+'-'+date+'.xlsx';
+    return loincCls + '_results.xlsx';
   }
 }

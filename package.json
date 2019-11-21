@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "clean": "rimraf src/class_*/*_results*xlsx",
+    "clean": "rimraf results",
     "test": "mocha"
   },
   "repository": {
