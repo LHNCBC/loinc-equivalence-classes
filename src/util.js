@@ -256,7 +256,10 @@ module.exports = {
           let colData = await rtn.query("select * from tempdb.sys.columns c where object_id =\n"+
             "object_id('tempdb..#EQUIV_TEMP')");
           let colNames = colData.recordsets[0].reduce((acc, row)=>{acc[row.name] = true; return acc}, {});
-          let outputCols = ['EQUIV_CLS', 'LOINC_NUM', 'COMPONENT', 'EXAMPLE_UCUM_UNITS'];
+          let outputCols = ['EQUIV_CLS', 'LOINC_NUM', 'COMPONENT']
+          if (colNames['COMPONENT_REV'])
+            outputCols.push('COMPONENT_REV');
+          outputCols.push('EXAMPLE_UCUM_UNITS');
           if (colNames['PROPERTY_REV'])
             outputCols.push('PROPERTY', 'PROPERTY_REV');
           if (colNames['TIME_REV'])
@@ -294,15 +297,8 @@ module.exports = {
         }
 
         // Write the output file
-        let d = new Date();
-        let month = '' + (d.getMonth() + 1);
-        if (month.length < 2)
-          month = '0'+month;
-        let date = '' +d.getDate();
-        if (date.length < 2)
-          date = '0' + date;
-        let outputFile = loincCls + '_results-'+d.getFullYear()+'-'+month+'-'+date+'.xlsx';
-        await workbook.xlsx.writeFile(path.join(__dirname, clsSubDir, outputFile));
+        await workbook.xlsx.writeFile(path.join(__dirname, clsSubDir,
+          module.exports.resultsFilename(loincCls)));
       },
 
 
@@ -357,10 +353,27 @@ module.exports = {
       await equivSpreadsheet(equivTable);
     }
     catch (e) {
-      console.log(e);
+      console.error(e);
+      process.exit(1); // signal error
     }
     finally {
       await closeConnection();
     }
+  },
+
+
+  /**
+   *  Returns the results filename, given the class name.
+   * @param loincCls the LOINC class name
+   */
+  resultsFilename: function (loincCls) {
+    let d = new Date();
+    let month = '' + (d.getMonth() + 1);
+    if (month.length < 2)
+      month = '0'+month;
+    let date = '' +d.getDate();
+    if (date.length < 2)
+      date = '0' + date;
+    return loincCls + '_results-'+d.getFullYear()+'-'+month+'-'+date+'.xlsx';
   }
 }
