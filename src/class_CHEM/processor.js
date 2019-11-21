@@ -24,8 +24,6 @@ module.exports = async function (loincCls, clsConfig) {
       await request().input('o2', oxygenStrings[i]).query('INSERT INTO #OXYGEN_COMP VALUES (@o2)');
     };
 
-    let promises// = oxygenStrings.map(async function(o2) {//    await Promise.all(promises);
-
     // Create the start of the equivalence class table
     await request().input('tableName', equivTable).input('className', loincCls).execute('create_equiv_table');
 
