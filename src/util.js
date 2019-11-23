@@ -381,8 +381,6 @@ module.exports = {
         }
 
         // Write the output file
-        console.log("existsSync returns for "+resultsDir);
-        console.log(fs.existsSync(resultsDir));
         if (!fs.existsSync(resultsDir))
           fs.mkdirSync(resultsDir);
         await workbook.xlsx.writeFile(path.join(resultsDir,
