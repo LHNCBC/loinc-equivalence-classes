@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const resultsDir = path.join(__dirname, '../zresults');
+const resultsDir = path.join(__dirname, '../results');
 
 module.exports = {
   /**
