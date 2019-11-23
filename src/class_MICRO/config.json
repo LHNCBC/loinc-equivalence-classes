@@ -6,7 +6,7 @@
       "Trichomonas vaginalis", "Ureaplasma%"]
   },
   "PROPERTY": {
-    "PrACncTitr": ["PrThr", "ACnc", "Titr"]
+    "ACncTitr": ["ACnc", "Titr"]
   },
   "SYSTEM_STD": {
     "AnalRectalStool": ["Anal", "Anogenital", "Anorectal", "Anorectal/Stool", "Rectum", "Stool"],
