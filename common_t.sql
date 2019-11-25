@@ -16,27 +16,6 @@ BEGIN
 END;
 GO
 
--- Procedure:  Adds a column with nvarchar(255), deleting it first if it exists
--- already.
--- Parameters:
---   tableName - the name of the table
---   colName - the name of the column
-if object_id('add_column') is not NULL
-   DROP PROCEDURE add_column;
-GO
-CREATE PROCEDURE add_column @tableName nvarchar(255), @colName nvarchar(255)
-as
-BEGIN
-  DECLARE @sql nvarchar(255);
-  IF COL_LENGTH('plynch.'+@tableName, @colName) IS NOT NULL
-  BEGIN
-    SET @sql = 'ALTER TABLE '+quotename(@tableName)+' DROP COLUMN'+quotename(@colName);
-    EXEC(@sql);
-  END
-  SET @sql = 'ALTER TABLE '+quotename(@tableName)+' ADD '+quotename(@colName) + ' nvarchar(255)';
-  EXEC(@sql);
-END;
-GO
 
 -- Procedure:  Creates a new equivalence table as a subset of the LOINC table.
 -- Parameters:
@@ -80,49 +59,5 @@ BEGIN
   SET @sql = N'ALTER TABLE '+quotename(@tableName)+' ALTER COLUMN COMMON_ORDER_RANK int NULL;'
   EXEC sp_executeSQL @sql
   END;
-GO
-
--- Procedure:  Applies group information to a subset of the LOINC table.
--- Parameters:
---   equivTable:  The name of the table that contains a subset of the LOINC
---     table (with the same class), e.g. SERO_EQUIV.
---   equivTableCol:  The column (assumed already created with dup_column)
---     containing a copy of one of the LOINC columns (e.g. METHOD, SYSTEM,
---     etc.), to be partially overwritten with group names from the groupTable.
---   groupTable:  The name of the table containing group names to assign to
---     equivTableCol.  Assumption:  There should be a "Name" column whose value
---     can be used to join with the values in equivTableCol.
---   groupTableCol:  The name of the column in groupTable containing the group
---     name that will be used to replace the value in equivTableCol.  Values of
---     " (double quote) mean no replacement is to be done.
-if object_id('apply_groups') is not NULL
-   DROP PROCEDURE apply_groups;
-GO
--- Copies in the group information from the group table
-CREATE PROCEDURE apply_groups @equivTable nvarchar(255), @equivTableCol nvarchar(255),
- @groupTable nvarchar(255), @groupTableCol nvarchar(255)
-as
-BEGIN
-  DECLARE @sql nvarchar(255);
-  -- Remove leading/trailing whitespace and newline characters from the
-  -- groupTableCol field
-  SET @sql = N'update '+quotename(@groupTable)+
-    N' set '+quotename(@groupTableCol) + N'=RTRIM(LTRIM(REPLACE(REPLACE('+
-    quotename(@groupTableCol)+ ', CHAR(13), ''''), CHAR(10), '''')));'
-  EXEC (@sql)
-  -- Set NULL values in the Name column of @groupTable to '', so those will
-  -- join.  (There should at most one such record).
-  SET @sql = N'update '+quotename(@groupTable)+
-    N' set Name='''' where Name is null and '+quotename(@groupTableCol)+
-    N' is not null and '+quotename(@groupTableCol)+'!='''''
-  EXEC (@sql)
-  -- Now copy in the values from groupTableCol
-  SET @sql = N'UPDATE '+ quotename(@equivTable) + N' set '+quotename(@equivTableCol)+
-    N' = g.'+quotename(@groupTableCol)+N' from '+quotename(@equivTable)+' eqv left join '+
-    quotename(@groupTable)+N' g on eqv.'+quotename(@equivTableCol)+
-    N' = g.Name where g.'+quotename(@groupTableCol)+N' != ''"'' and g.'+
-    quotename(@groupTableCol)+N' is not null  ;'
-  EXEC (@sql)
-END;
 GO
 
