@@ -23,7 +23,7 @@ const equivConfig = require('../config'); // common configuration settings acros
 
     // SYSTEM_REV
     await dupAndApplyGroups(equivTable, 'SYSTEM', clsConfig.SYSTEM);
-    for (let group of ["Intravascular - any", "DuodGastricFld", "OcularVitrFld"])
+    for (let group of ["Intravascular-any", "DuodGastricFld", "OcularVitrFld"])
       await applyGroup(equivTable, 'SYSTEM_REV', equivConfig.SYSTEM[group], group);
     // For COMPONENTCORE values that are STD-causing, we use a different set of
     // SYSTEM groups.  First, make a temporary table with the COMPONENT values

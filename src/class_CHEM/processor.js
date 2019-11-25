@@ -42,10 +42,10 @@ module.exports = async function (loincCls, clsConfig) {
     await dupColumn(equivTable, 'SYSTEM', 'SYSTEM_REV');
     for (let group of ["DuodGastricFld", "OcularVitrFld"])
       await applyGroup(equivTable, 'SYSTEM_REV', equivConfig.SYSTEM[group], group);
-    // For "Intravascular - any", do not apply when the COMPONENT is in the
+    // For "Intravascular-any", do not apply when the COMPONENT is in the
     // Oxygen group, regarless of what subparts it has.
     await createHatless(equivTable, 'COMPONENT');
-    let groupName = "Intravascular - any";
+    let groupName = "Intravascular-any";
     let condition = 'COMPONENT_HATLESS NOT IN (select Name from #OXYGEN_COMP)'
     await applyGroup(equivTable, 'SYSTEM_REV', equivConfig.SYSTEM[groupName], groupName, condition);
 

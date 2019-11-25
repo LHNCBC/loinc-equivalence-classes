@@ -23,7 +23,7 @@ const equivConfig = require('../config'); // common configuration settings acros
 
     // SYSTEM_REV
     await dupColumn(equivTable, 'SYSTEM', 'SYSTEM_REV');
-    let groupName = "Intravascular - any";
+    let groupName = "Intravascular-any";
     await applyGroup(equivTable, 'SYSTEM_REV', equivConfig.SYSTEM[groupName], groupName);
 
     // SCALE_REV

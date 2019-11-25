@@ -2,7 +2,7 @@ const assert = require('assert');
 const sql = require('mssql/msnodesqlv8');
 const loincUtil = require('../src/util');
 
-describe.only('util.js', async function() {
+describe('util.js', async function() {
   let pool, sqlUtil;
   let testTable = 'TEST_TABLE';
 
