@@ -9,7 +9,7 @@ describe('util.js', function() {
 
     /**
      *  Inserts values into table testTable.  It is assumed that the values
-     *  in rowVals are appropriate for the table's columns.
+     *  in rowVals have appropriate datatypes for the table's columns.
      */
     async function insertVals(rowVals) {
       let sql = "INSERT INTO "+testTable+" VALUES ('";
