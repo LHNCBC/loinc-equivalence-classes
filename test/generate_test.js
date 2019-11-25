@@ -4,8 +4,11 @@ const fs = require('fs');
 const loincUtil = require('../src/util');
 
 const srcDir = path.join(__dirname, '../src');
+const rimraf = require('rimraf');
 
 describe('generate_all.js', ()=>{
+  let resultsDir = path.join(__dirname, '../results');
+
   /**
    *  Returns the class directories for the classes for which a
    *  generate_classes.js program has been implemented.
@@ -15,18 +18,9 @@ describe('generate_all.js', ()=>{
       f=>f.match(/^class_/) && fs.existsSync(path.join(srcDir, f, 'generate_classes.js')));
   }
 
-  before(function() {
+  before(function(done) {
     // Delete the results files.
-    getClassDirs().forEach(function(cd) {
-      let classDirPN = path.join(srcDir, cd);
-      let loincCls = cd.slice(6);
-      fs.readdirSync(classDirPN).forEach(function(file) {
-        if (file.match('^'+loincCls+'_results')) {
-          console.log("rm "+file);
-          fs.unlinkSync(path.join(classDirPN,file));
-        }
-      });
-    });
+    rimraf(resultsDir, ()=>done());
   });
 
   it('should run and exit normally', function(done) {
@@ -46,7 +40,7 @@ describe('generate_all.js', ()=>{
     classDirs.forEach(cDir=>{
       let loincCls = cDir.slice(6);
       let resultsFile = loincUtil.resultsFilename(loincCls);
-      let fStats = fs.statSync(path.join(srcDir, cDir, resultsFile));
+      let fStats = fs.statSync(path.join(resultsDir, resultsFile));
       assert.ok(fStats);
       assert.ok(fStats.size > 0);
     });

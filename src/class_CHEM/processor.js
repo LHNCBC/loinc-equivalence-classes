@@ -40,13 +40,18 @@ module.exports = async function (loincCls, clsConfig) {
 
     // SYSTEM_REV
     await dupColumn(equivTable, 'SYSTEM', 'SYSTEM_REV');
-    for (let group of ["Intravascular - any", "DuodGastricFld", "OcularVitrFld"]) {
+    for (let group of ["DuodGastricFld", "OcularVitrFld"])
       await applyGroup(equivTable, 'SYSTEM_REV', equivConfig.SYSTEM[group], group);
-    }
+    // For "Intravascular - any", do not apply when the COMPONENT is in the
+    // Oxygen group, regarless of what subparts it has.
+    await createHatless(equivTable, 'COMPONENT');
+    let groupName = "Intravascular - any";
+    let condition = 'COMPONENT_HATLESS NOT IN (select Name from #OXYGEN_COMP)'
+    await applyGroup(equivTable, 'SYSTEM_REV', equivConfig.SYSTEM[groupName], groupName, condition);
+
     // For COMPONENTS in the oxygen group, we use different groups.  (Not really
     // needed for DrugTox, but will run the same code as for CHEM).
-    await createHatless(equivTable, 'COMPONENT');
-    let condition = 'COMPONENT_HATLESS in (select Name from #OXYGEN_COMP)'
+    condition = 'COMPONENT_HATLESS in (select Name from #OXYGEN_COMP)'
     for (let group of ["Arterial*", "Venous*"])
       await applyGroup(equivTable, 'SYSTEM_REV', clsConfig.SYSTEM[group], group, condition);
 
@@ -56,12 +61,12 @@ module.exports = async function (loincCls, clsConfig) {
 
     // METHOD_REV
     await dupColumn(equivTable, 'METHOD_TYP', 'METHOD_REV');
-    let groupName = 'Method-Other';
+    groupName = 'Method-Other';
     let skipPatterns = clsConfig.METHOD[groupName].skipPatterns;
     await applyGroupSkipPatterns(equivTable, 'METHOD_REV', skipPatterns, groupName);
 
     // Equivalance class name
-    let classCols = ['COMPONENT_HATLESS','PROPERTY_REV','TIME_REV',
+    let classCols = ['COMPONENT','PROPERTY_REV','TIME_REV',
       'SYSTEM_REV'];
     if (clsConfig.SCALE)
       classCols.push('SCALE_REV')
