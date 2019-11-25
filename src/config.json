@@ -14,11 +14,13 @@
     ]
   },
   "SYSTEM": {
-    "Intravascular - any": [
+    "Bld-any": ["Bld", "BldA", "BldC", "BldMV", "BldP", "BldV"],
+    "BLdCo-any": ["BldCo", "BldCoA", "BldCoMV", "BldCoV"],
+    "DuodGastricFld": ["Duod fld/Gast fld", "Duod fld", "Gast fld"],
+    "Intravascular-any": [
       "Bld", "BldA", "BldC", "BldMV", "BldP", "BldV", "Bld.dot", "Plas", "PlasA",
       "PlasV", "Ser", "Ser/Bld", "Ser/Plas", "Ser/Plas/Bld", "Ser/Plas.ultracentrifugal"
     ],
-    "DuodGastricFld": ["Duod fld/Gast fld", "Duod fld", "Gast fld"],
     "OcularVitrFld": ["Ocular fld", "Vitr fld"]
   },
   "SCALE": {

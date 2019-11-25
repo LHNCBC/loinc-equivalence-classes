@@ -426,7 +426,7 @@ module.exports = {
     let {request, createEquivClasses, equivSpreadsheet, closeConnection} = util;
     try {
       // Create the table
-      const equivTable = loincCls + '_EQUIV';
+      const equivTable = loincCls.replace(/\//g, '') + '_EQUIV'; // remove / from class strings
       await request().input('tableName', equivTable).input('className', loincCls).execute('create_equiv_table');
 
       // Edit the table

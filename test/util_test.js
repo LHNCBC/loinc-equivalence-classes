@@ -2,11 +2,16 @@ const assert = require('assert');
 const sql = require('mssql/msnodesqlv8');
 const loincUtil = require('../src/util');
 
-describe('util.js', function() {
-  describe('applyGroup', async function(done) {
-    let pool, sqlUtil;
-    let testTable = 'TEST_TABLE';
+describe.only('util.js', async function() {
+  let pool, sqlUtil;
+  let testTable = 'TEST_TABLE';
 
+  before(async function() {
+    pool = await sql.connect({options: {trustedConnection: true}, server: 'ceb-mssql'});
+    sqlUtil = await loincUtil.sqlUtil();
+  });
+
+  describe('applyGroup', async function() {
     /**
      *  Inserts values into table testTable.  It is assumed that the values
      *  in rowVals have appropriate datatypes for the table's columns.
@@ -16,11 +21,6 @@ describe('util.js', function() {
       sql += rowVals.join("', '") + "')";
       await pool.request().query(sql);
     }
-
-    before(async function() {
-      pool = await sql.connect({options: {trustedConnection: true}, server: 'ceb-mssql'});
-      sqlUtil = await loincUtil.sqlUtil();
-    });
 
     it('should affect the correct rows', async function() {
       // Create some test data
@@ -46,10 +46,23 @@ describe('util.js', function() {
       assert.deepEqual(rowObjs[3],
         {COMPONENT: 'C peptide', SYSTEM_REV: 'Urine'});
     });
+  });
 
-    after(async function() {
-      await pool.close();
-      await sqlUtil.closeConnection();
+  describe('dupColumn', async function() {
+    it('should duplicate a column in the table', async function() {
+      // Just re-use the test data from applyGroup's test.
+      await sqlUtil.dupColumn(testTable, 'COMPONENT', 'COMPONENT_REV');
+      let results = await pool.request().query('select COMPONENT_REV from '+testTable);
+      let revVals = [];
+      for (let row of results.recordset)
+        revVals.push(row.COMPONENT_REV);
+      assert.deepEqual(revVals, ['Oxygen saturation', 'Oxygen saturation^during apnea',
+        'Cardiac heart disease risk', 'C peptide']);
     });
+  }),
+
+  after(async function() {
+    await pool.close();
+    await sqlUtil.closeConnection();
   });
 });
