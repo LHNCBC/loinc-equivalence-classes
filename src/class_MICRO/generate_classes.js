@@ -42,9 +42,7 @@ const equivConfig = require('../config'); // common configuration settings acros
     // Comment on group "IA--IF-Null*" (from Word document documentation):  We
     // also include null methods in this class but only when the analytes have
     // “Ab” or “Ag” in the name.
-    await query('UPDATE '+equivTable +" set METHOD_REV='IA--IF-Null*' where "+
-      "(METHOD_REV is null or METHOD_REV = '') and "+
-      "(COMPONENT like '%[+. ]A[bg]' or COMPONENT like '%[+. ]A[bg][+. ]%')");
+    await require('./ia_if_null')(query, equivTable);
 
     // Equivalance class name
     await createEquivClasses(equivTable, ['COMPONENT','PROPERTY_REV',
