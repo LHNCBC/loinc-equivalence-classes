@@ -144,7 +144,6 @@ module.exports = {
           }
         }
         // Apply the rest the groups.
-console.log("%%% remaining groupNames="+groupNames);
         for (let group of groupNames) {
           await rtn.applyGroup(tableName, colName, groups[group], group, condition);
         }
@@ -428,7 +427,8 @@ console.log("%%% remaining groupNames="+groupNames);
    */
   sqlUtil: async function() {
     const sql = require('mssql/msnodesqlv8');
-    let pool = await sql.connect({options: {trustedConnection: true}, server: 'ceb-mssql'});
+    let pool = await sql.connect({options: {trustedConnection: true},
+      server: require('./config').sqlServerHost});
     return module.exports.sqlUtilFactory(pool);
   },
 

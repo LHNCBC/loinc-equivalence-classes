@@ -25,5 +25,6 @@
   },
   "SCALE": {
     "OrdNomNarDoc": ["Ord", "Nom", "Nar", "Doc"]
-  }
+  },
+  "sqlServerHost": "ceb-mssql"
 }
