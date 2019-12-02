@@ -19,7 +19,7 @@ require('../util').genTableAndResults(loincCls, ['COMPONENT', 'PROPERTY_REV',
   await dupAndApplyGroups(equivTable, 'SYSTEM', groupData);
 
   // METHOD_REV
-  // Add group IA--If-Null* from MICRO
+  // Add group IA-IF-Null* from MICRO
   await dupColumn(equivTable, 'METHOD_TYP', 'METHOD_REV')
   await require('../class_MICRO/ia_if_null')(query, equivTable);
   clsConfig.METHOD["IA-IF-Null*"] =

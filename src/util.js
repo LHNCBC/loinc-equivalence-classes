@@ -127,7 +127,7 @@ module.exports = {
        */
       applyGroups: async function(tableName, colName, groups, condition) {
         // First look for a default group.  The default group is only used if
-        // one other other groups does not take effect.  The test of whether the
+        // one of the other groups does not take effect.  The test of whether the
         // other groups take effect is to look for the group name in the column
         // after the other groups have been run, so we apply the default group
         // last.
