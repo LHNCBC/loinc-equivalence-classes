@@ -1,6 +1,13 @@
 # Notes on procedure for generating equivalence classes
 
-## Set Up
+The purpose of this package is to generate Excel spreadsheets, one for each of
+several LOINC classes, that contain "equivalence classes" -- groups of LOINC
+terms that for some purposes can be regarded as equivalent.  One use of these
+equivalance classes is in a flowsheet application.  The spreadsheets output by
+this package are available in a separate package, at
+https://github.com/lhncbc/Equivalence-Classes-Data-Files.
+
+## Setup
 It is assumed that you have two databases on SQL Server (which is required
 because of the use of Transact-SQL).  There should be a database "relma" which
 contains the latest release of the RELMA database.  (See notes below for how to
