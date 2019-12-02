@@ -1,13 +1,14 @@
 const assert = require('assert');
 const sql = require('mssql/msnodesqlv8');
 const loincUtil = require('../src/util');
+const config = require('../src/config');
 
 describe('util.js', async function() {
   let pool, sqlUtil;
   let testTable = 'TEST_TABLE';
 
   before(async function() {
-    pool = await sql.connect({options: {trustedConnection: true}, server: 'ceb-mssql'});
+    pool = await sql.connect({options: {trustedConnection: true}, server: config.sqlServerHost});
     sqlUtil = await loincUtil.sqlUtil();
   });
 
