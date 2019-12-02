@@ -3,11 +3,12 @@
 ## Set Up
 It is assumed that you have two databases on SQL Server (which is required
 because of the use of Transact-SQL).  There should be a database "relma" which
-contains the latest release of the RELMA database.  There should also be your
-own working database for generating tables from which the output spreadsheets
-are created.  The SQL Server hostname should be set in the file src/config.json
-as the value of the key "sqlServerHost".  Your working database should be the
-default database for new connetions to the server.
+contains the latest release of the RELMA database.  (See notes below for how to
+import RELMA).  There should also be your own working database for generating
+tables from which the output spreadsheets are created.  The SQL Server hostname
+should be set in the file src/config.json as the value of the key
+"sqlServerHost".  Your working database should be the default database for new
+connetions to the server.
 
 In the src directory is a spreadsheet, "molecular_weights.xlsx".  This data must
 be loaded into your working database as the table "MOLECULAR_WEIGHTS".  SQL
@@ -49,7 +50,7 @@ select all again to copied the formatting.  This will need to be done for both
 sheets.  Note that there are different templates for each LOINC class.
 
 
-## Notes on importing the relma database
+## Notes on importing the RELMA database
 Download and install the RELMA program.  The database file gets placed in
 C:\Users\Public\Documents\RELMA\RELMA.MDB.  Open MS SQL Server Management
 Studio, and delete the existing tables from database "relma" (for each table,
