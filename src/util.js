@@ -140,7 +140,7 @@ module.exports = {
           if (groupData.default) {
             defaultGroupName = group;
             defaultGroupData = groupData;
-            groupNames.splice(i, 1);  // remove from later processing
+            groupNames.splice(i, 1);  // remove the default group from the list
           }
         }
         // Apply the rest the groups.
