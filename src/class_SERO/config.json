@@ -1,0 +1,10 @@
+{
+  "PROPERTY": {
+    "PrThrTitrACnc": ["PrThr", "Titr", "ACnc"]
+  },
+  "METHOD": {
+    "Aggl": ["Aggl", "Aggl.adult RBC", "Aggl.cord RBC", "LA", "Sheep cell aggl"],
+    "Molecular-genetics": ["Molgen", "RFLP probe"],
+    "Method-Other": {"default": true, "skipPatterns": ["% deg C%"]}
+  }
+}

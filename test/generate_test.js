@@ -39,8 +39,8 @@ describe('generate_all.js', ()=>{
     let classDirs = getClassDirs();
     classDirs.forEach(cDir=>{
       let loincCls = cDir.slice(6);
-      let resultsFile = loincUtil.resultsFilename(loincCls);
-      let fStats = fs.statSync(path.join(resultsDir, resultsFile));
+      let resultsFile = loincUtil.resultsPathname(loincCls);
+      let fStats = fs.statSync(resultsFile);
       assert.ok(fStats);
       assert.ok(fStats.size > 0);
     });

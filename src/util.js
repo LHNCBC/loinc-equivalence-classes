@@ -108,14 +108,9 @@ module.exports = {
        *  replacement is made.
        */
       applyGroup: async function(tableName, colName, colValues, groupValue, condition) {
-        if (colValues.length > 1) {
+        if (colValues.length >= 1) {
           await rtn._applyGroupWithOperator(tableName, colName, colValues,
             groupValue, '=', 'OR', condition);
-        /*
-          await rtn._applyGroupConditionFn(tableName, colName, colValues, groupValue,
-            varName=>"iif(PATINDEX('%^%', "+colName+")>0, substring("+
-              colName+", 0, PATINDEX('%^%', "+colName+")), "+colName+")=@"+varName, 'OR', condition);
-              */
         }
       },
 
@@ -131,8 +126,46 @@ module.exports = {
        *  replacement is made.
        */
       applyGroups: async function(tableName, colName, groups, condition) {
-        for (let group of Object.keys(groups))
+        // First look for a default group.  The default group is only used if
+        // one of the other groups does not take effect.  The test of whether the
+        // other groups take effect is to look for the group name in the column
+        // after the other groups have been run, so we apply the default group
+        // last.
+        groups = JSON.parse(JSON.stringify(groups)); // copy so we can modify it
+        let defaultGroupName, defaultGroupData;
+        let groupNames = Object.keys(groups);
+        for (let i=0, len=groupNames.length; i<len && !defaultGroupName; ++i) {
+          let group = groupNames[i];
+          let groupData = groups[group];
+          if (groupData.default) {
+            defaultGroupName = group;
+            defaultGroupData = groupData;
+            groupNames.splice(i, 1);  // remove the default group from the list
+          }
+        }
+        // Apply the rest the groups.
+        for (let group of groupNames) {
           await rtn.applyGroup(tableName, colName, groups[group], group, condition);
+        }
+        // Now handle the default, if any
+        if (defaultGroupName) {
+          // The only case we have is when there is also a "skipPatterns" key
+          if (defaultGroupData.skipPatterns) {
+            // Build a condition to exclude already applied groups.
+            let appliedCond;
+            for (let group of groupNames) {
+              appliedCond = appliedCond ? appliedCond + ' AND ' : '';
+              // Handle sub-parts (^)
+              appliedCond += colName+"!='"+group + "' AND "+colName+" not like '"+group+"^%'";
+            }
+            if (condition)
+              appliedCond = '('+condition+') AND ('+appliedCond+')';
+            await rtn.applyGroupSkipPatterns(tableName, colName,
+              defaultGroupData.skipPatterns, defaultGroupName, appliedCond);
+          }
+          else
+            throw new Error("Configuration error:  unknown default specification");
+        }
       },
 
 
@@ -225,16 +258,14 @@ module.exports = {
        * @param colName the column being revised
        * @param skipPatterns an array of SQL patterns
        * @param groupValue the new value replacing values in colName
+       * @param globalCondition some additional SQL to AND with all of the other
+       *  conditions generated for the values in skipPatterns.
        */
-      applyGroupSkipPatterns: async function(tableName, colName, skipPatterns, groupValue) {
+      applyGroupSkipPatterns: async function(tableName, colName, skipPatterns,
+        groupValue, globalCondition) {
+
         await rtn._applyGroupWithOperator(tableName, colName, skipPatterns,
-          groupValue, 'NOT LIKE', 'AND');
-      /*
-        // Be careful of sub-parts.  Allow skipPatterns to match just the first sub-part, if there are sub-parts.
-        await rtn.applyGroupConditionFn(tableName, colName, skipPatterns, groupValue,
-          varName=>"iif(PATINDEX('%^%', "+colName+")>0, substring("+
-            colName+", 0, PATINDEX('%^%', "+colName+")), "+colName+") NOT LIKE @"+varName, 'AND');
-            */
+          groupValue, 'NOT LIKE', 'AND', globalCondition);
       },
 
 
@@ -250,13 +281,6 @@ module.exports = {
       applyGroupSkipValues: async function(tableName, colName, skipValues, groupValue) {
         await rtn._applyGroupWithOperator(tableName, colName, skipValues,
           groupValue, '!=', 'AND');
-
-      /*
-        // Be careful of sub-parts.  Allow skipValues to match just the first sub-part, if there are sub-parts.
-        await rtn.applyGroupConditionFn(tableName, colName, skipValues, groupValue,
-          varName=>"iif(PATINDEX('%^%', "+colName+")>0, substring("+
-            colName+", 0, PATINDEX('%^%', "+colName+")), "+colName+") != @"+varName, 'AND');
-            */
       },
 
 
@@ -383,8 +407,7 @@ module.exports = {
         // Write the output file
         if (!fs.existsSync(resultsDir))
           fs.mkdirSync(resultsDir);
-        await workbook.xlsx.writeFile(path.join(resultsDir,
-          module.exports.resultsFilename(loincCls)));
+        await workbook.xlsx.writeFile(module.exports.resultsPathname(loincCls));
       },
 
 
@@ -404,7 +427,8 @@ module.exports = {
    */
   sqlUtil: async function() {
     const sql = require('mssql/msnodesqlv8');
-    let pool = await sql.connect({options: {trustedConnection: true}, server: 'ceb-mssql'});
+    let pool = await sql.connect({options: {trustedConnection: true},
+      server: require('./config').sqlServerHost});
     return module.exports.sqlUtilFactory(pool);
   },
 
@@ -426,7 +450,7 @@ module.exports = {
     let {request, createEquivClasses, equivSpreadsheet, closeConnection} = util;
     try {
       // Create the table
-      const equivTable = loincCls + '_EQUIV';
+      const equivTable = loincCls.replace(/\//g, '') + '_EQUIV'; // remove / from class strings
       await request().input('tableName', equivTable).input('className', loincCls).execute('create_equiv_table');
 
       // Edit the table
@@ -449,10 +473,10 @@ module.exports = {
 
 
   /**
-   *  Returns the results filename, given the class name.
+   *  Returns the results file pathname, given the class name.
    * @param loincCls the LOINC class name
    */
-  resultsFilename: function (loincCls) {
-    return loincCls + '_results.xlsx';
+  resultsPathname: function (loincCls) {
+    return path.join(resultsDir, loincCls + '_results.xlsx');
   }
 }

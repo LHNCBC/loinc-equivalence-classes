@@ -23,7 +23,7 @@ const equivConfig = require('../config'); // common configuration settings acros
 
     // SYSTEM_REV
     await dupAndApplyGroups(equivTable, 'SYSTEM', clsConfig.SYSTEM);
-    for (let group of ["Intravascular - any", "DuodGastricFld", "OcularVitrFld"])
+    for (let group of ["Intravascular-any", "DuodGastricFld", "OcularVitrFld"])
       await applyGroup(equivTable, 'SYSTEM_REV', equivConfig.SYSTEM[group], group);
     // For COMPONENTCORE values that are STD-causing, we use a different set of
     // SYSTEM groups.  First, make a temporary table with the COMPONENT values
@@ -42,9 +42,7 @@ const equivConfig = require('../config'); // common configuration settings acros
     // Comment on group "IA--IF-Null*" (from Word document documentation):  We
     // also include null methods in this class but only when the analytes have
     // “Ab” or “Ag” in the name.
-    await query('UPDATE '+equivTable +" set METHOD_REV='IA--IF-Null*' where "+
-      "(METHOD_REV is null or METHOD_REV = '') and "+
-      "(COMPONENT like '%[+. ]A[bg]' or COMPONENT like '%[+. ]A[bg][+. ]%')");
+    await require('./ia_if_null')(query, equivTable);
 
     // Equivalance class name
     await createEquivClasses(equivTable, ['COMPONENT','PROPERTY_REV',

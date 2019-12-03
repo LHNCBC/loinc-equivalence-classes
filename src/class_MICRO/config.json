@@ -50,7 +50,7 @@
     "Giemsa or Acridine orange stains": ["Acridine orange   Giemsa stain", "Acridine orange stain", "Giemsa stain", "Giemsa stain.3 micron", "Giemsa stain. May-Grunwald", "Modified Giemsa", "Wright Giemsa stain"],
     "Gram stains": ["Crystal violet stain", "Gram stain"],
     "HBsAG stain": ["Orcein stain"],
-    "IA--IF-Null*": ["CIE", "EIA", "EIA.RST", "EMIA", "IA", "IA.rapid", "IF", "Rapid", "RIA", "RIPA"],
+    "IA-IF-Null*": ["CIE", "EIA", "EIA.RST", "EMIA", "IA", "IA.rapid", "IF", "Rapid", "RIA", "RIPA"],
     "IB*": ["IB", "IB.test strip"],
     "Immune diffusion": ["ID", "Immune diffusion"],
     "Intestinal parasite stains": ["Brilliant cresyl blue", "Safranin stain", "Trichrome stain modified", "Trichrome stain", "Trichrome stain", "Gomori-Wheatley", "Trichrome stain.Masson", "Trichrome stain.Masson modified"],

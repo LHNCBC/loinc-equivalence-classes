@@ -1,0 +1,6 @@
+{
+  "SYSTEM": {
+    "Amn": ["Amnio fld", "Amnio fld/CVS", "CVS", "Tiss^Fetus", "POC"],
+    "Bld": ["Bld", "Bld/Tiss", "Bld/Bone mar", "Bone mar", "Buccal", "Cells.XXX"]
+  }
+}
