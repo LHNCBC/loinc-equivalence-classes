@@ -1,6 +1,6 @@
 {
   "name": "loinc-equivalence-classes",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Notes on procedure for generating equivalence classes",
   "main": "index.js",
   "directories": {
