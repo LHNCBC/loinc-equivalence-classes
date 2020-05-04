@@ -45,16 +45,8 @@ In either case, the output spreadsheets will be written to the "results"
 directory (in the root of the package).
 
 The spreadsheets are created from a "results_template.xlsx" file in the
-individual class directories, e.g. src\class_UA\results_template.xlsx.  However,
-the package used to write out the results spreadsheets does not preserve the
-conditional formatting found in the template files, and the conditional
-formatting is there to highlight which groups were applied to which LOINC terms.
-
-The conditional formatting can be copied from results_template.xlsx using the
-"format painter" tool.  In results_template.xlsx, select all, and then click
-"format painter".  Then go to the generated spreadsheet, select the sheet, and
-select all again to copied the formatting.  This will need to be done for both
-sheets.  Note that there are different templates for each LOINC class.
+individual class directories, e.g. src\class_UA\results_template.xlsx, which
+contains some conditional formatting rules.
 
 
 ## Notes on importing the RELMA database
@@ -62,7 +54,7 @@ Download and install the RELMA program.  The database file gets placed in
 C:\Users\Public\Documents\RELMA\RELMA.MDB.  Open MS SQL Server Management
 Studio, and delete the existing tables from database "relma" (for each table,
 right click, press d, and then enter).  Right click on relma, and choose
-"Tasks -> Import Data".  Select Access, and and the datafile location.  Select
+"Tasks -> Import Data".  Select Access, and the datafile location.  Select
 SQL Server Native Client (which uses Windows Integrated Authentication), and
 proceed with the import.
 

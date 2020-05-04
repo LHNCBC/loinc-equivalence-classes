@@ -1,6 +1,6 @@
 {
   "name": "loinc-equivalence-classes",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Notes on procedure for generating equivalence classes",
   "main": "index.js",
   "directories": {
@@ -17,7 +17,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "exceljs": "^3.3.1",
+    "exceljs": "^3.8.2",
     "msnodesqlv8": "^0.8.4",
     "mssql": "^6.0.0",
     "rimraf": "^3.0.0"
