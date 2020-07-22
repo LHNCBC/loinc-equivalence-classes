@@ -52,8 +52,10 @@ contains some conditional formatting rules.
 ## Notes on importing the RELMA database
 Download and install the RELMA program.  The database file gets placed in
 C:\Users\Public\Documents\RELMA\RELMA.MDB.  Open MS SQL Server Management
-Studio, and delete the existing tables from database "relma" (for each table,
-right click, press d, and then enter).  Right click on relma, and choose
+Studio, and delete the existing tables from database "relma".  (A quick way to
+do that is to expand "relma", click on "tables", press F7 to bring up the Object
+Explorer Details window, select all of the tables (but not the folders), and
+press the delete key.)  Right click on "relma", and choose
 "Tasks -> Import Data".  Select Access, and the datafile location.  Select
 SQL Server Native Client (which uses Windows Integrated Authentication), and
 proceed with the import.
