@@ -1,3 +1,8 @@
+> [!WARNING]
+> This repository has been archived and is no longer maintained.  
+> The code is provided for historical reference and may contain unpatched or unknown vulnerabilities.  
+> It should not be used in production systems.
+
 # Notes on procedure for generating equivalence classes
 
 The purpose of this package is to generate Excel spreadsheets, one for each of
@@ -59,4 +64,3 @@ press the delete key.)  Right click on "relma", and choose
 "Tasks -> Import Data".  Select Access, and the datafile location.  Select
 SQL Server Native Client (which uses Windows Integrated Authentication), and
 proceed with the import.
-
